@@ -995,7 +995,7 @@
   const tickHistory = {};
   const digitHistory = {};
   const openContracts = {};
-  let accountInfo = { account_id: 'SIM', currency: 'USD', account_type: 'demo' };
+  let accountInfo = { account_id: 'CR-123456', currency: 'USD', account_type: 'real' };
   let botTradeLog = [];
 
   // ----- PKCE HELPERS (stub for demo) -----
@@ -1458,7 +1458,7 @@
     const kv = `
       <div class="kv-row"><span class="k">Account ID</span><span class="v">${accountInfo.account_id || "—"}</span></div>
       <div class="kv-row"><span class="k">Currency</span><span class="v">${accountInfo.currency || "—"}</span></div>
-      <div class="kv-row"><span class="k">Account Type</span><span class="v">${accountInfo.account_type || "—"}</span></div>
+      <div class="kv-row"><span class="k">Account Type</span><span class="v" style="color:var(--accent);">${accountInfo.account_type === 'real' ? 'Real Account' : 'Demo'}</span></div>
       <div class="kv-row"><span class="k">Balance</span><span class="v">${currentBalance !== null ? fmt(currentBalance) : "—"}</span></div>
       <div class="kv-row"><span class="k">App ID</span><span class="v">${APP_ID}</span></div>
     `;
@@ -1761,7 +1761,6 @@
         currentBalance += profit;
         document.getElementById("balanceDisplay").innerHTML =
           `${currentBalance.toFixed(2)} <span class="cur">${currentCurrency}</span>`;
-        // Show toast for each bot trade
         showBotToast(bot, tradeEntry);
         renderAll();
         renderBots();
