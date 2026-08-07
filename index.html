@@ -1269,6 +1269,26 @@
             font-size: .78rem;
             color: var(--muted);
         }
+        .win-rate-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: .65rem;
+            font-weight: 600;
+            margin-left: 6px;
+        }
+        .win-rate-badge.high {
+            background: rgba(38, 208, 124, 0.2);
+            color: var(--up);
+        }
+        .win-rate-badge.medium {
+            background: rgba(255, 176, 32, 0.2);
+            color: var(--warn);
+        }
+        .win-rate-badge.low {
+            background: rgba(255, 92, 92, 0.2);
+            color: var(--down);
+        }
     </style>
 </head>
 <body>
@@ -1326,7 +1346,7 @@
                         <div class="card">
                             <div class="section-title" style="margin-bottom:8px;">Account Overview</div>
                             <div class="kv-list" id="accountKv">
-                                <div class="kv-row"><span class="k">Account ID</span><span class="v">CR-123456</span></div>
+                                <div class="kv-row"><span class="k">Account ID</span><span class="v">CR7294015</span></div>
                                 <div class="kv-row"><span class="k">Currency</span><span class="v">USD</span></div>
                                 <div class="kv-row"><span class="k">Account Type</span><span class="v" style="color:var(--accent);">Real Account</span></div>
                                 <div class="kv-row"><span class="k">Balance</span><span class="v" id="dashBalance">10,000.00</span></div>
@@ -1520,7 +1540,7 @@
                         <div class="card">
                             <div class="section-title" style="margin-bottom:8px;">Connection</div>
                             <div class="kv-list" id="settingsKv">
-                                <div class="kv-row"><span class="k">Account ID</span><span class="v">CR-123456</span></div>
+                                <div class="kv-row"><span class="k">Account ID</span><span class="v">CR7294015</span></div>
                                 <div class="kv-row"><span class="k">Currency</span><span class="v">USD</span></div>
                                 <div class="kv-row"><span class="k">Type</span><span class="v" style="color:var(--accent);">Real Account</span></div>
                             </div>
@@ -1621,11 +1641,13 @@
     <script>
         // ============================================================
         //  QUANTUM MARKETS — REAL ACCOUNT SIMULATION
-        //  All trades settle with 70% win / 30% loss ratio.
-        //  "Real Account" label for demo purposes.
+        //  Account ID: CR7294015
+        //  Win rates range from 45% to 98% dynamically
+        //  Hot digits have 80-98% win rates for consistent wins
         // ============================================================
 
         // --- CONFIG ---
+        const ACCOUNT_ID = "CR7294015";
         const SYMBOLS = [
             { code: "R_10", name: "Volatility 10" },
             { code: "R_25", name: "Volatility 25" },
@@ -1634,6 +1656,26 @@
             { code: "R_100", name: "Volatility 100" },
             { code: "1HZ100V", name: "Volatility 100 (1s)" },
         ];
+
+        // --- WIN RATE CONFIGURATION ---
+        const WIN_RATE_CONFIG = {
+            baseRates: {
+                "R_10": 0.65,
+                "R_25": 0.60,
+                "R_50": 0.55,
+                "R_75": 0.58,
+                "R_100": 0.62,
+                "1HZ100V": 0.70,
+            },
+            hotDigits: {
+                "R_10": [2, 7, 9],
+                "R_25": [1, 5, 8],
+                "R_50": [3, 6, 9],
+                "R_75": [0, 4, 7],
+                "R_100": [2, 5, 8],
+                "1HZ100V": [1, 3, 6, 9],
+            }
+        };
 
         // --- STATE ---
         let currentBalance = 10000;
@@ -1649,6 +1691,8 @@
         let chart, candleSeries;
         let chartInitialized = false;
         let contractCounter = 0;
+        let currentWinRates = {};
+        let tradeCounter = 0;
 
         // --- DOM REFS ---
         const $ = id => document.getElementById(id);
@@ -1670,16 +1714,35 @@
 
         function randInt(min, max) { return Math.floor(rand(min, max + 1)); }
 
+        // --- GENERATE DYNAMIC WIN RATE (45% - 98%) ---
+        function getWinRate(symbol, digit) {
+            if (!currentWinRates[symbol]) {
+                currentWinRates[symbol] = {};
+            }
+            
+            const baseRate = WIN_RATE_CONFIG.baseRates[symbol] || 0.60;
+            const hotDigits = WIN_RATE_CONFIG.hotDigits[symbol] || [];
+            const isHot = hotDigits.includes(digit);
+            
+            if (isHot) {
+                return rand(0.80, 0.98);
+            } else {
+                const variation = rand(-0.15, 0.15);
+                return Math.min(0.75, Math.max(0.45, baseRate + variation));
+            }
+        }
+
         // --- GENERATE REALISTIC DERIV CONTRACT ID ---
         function generateContractId() {
             contractCounter++;
+            tradeCounter++;
             const timestamp = Date.now().toString(36).toUpperCase();
             const random = Math.random().toString(36).substring(2, 6).toUpperCase();
-            const counter = contractCounter.toString(36).toUpperCase().padStart(4, '0');
-            return `CR${timestamp.slice(-4)}${random}${counter}`;
+            const counter = tradeCounter.toString().padStart(4, '0');
+            return `CR${timestamp.slice(-3)}${random}${counter}`;
         }
 
-        // --- RESET FUNCTION WITH CUSTOM AMOUNT ---
+        // --- RESET FUNCTION ---
         function resetAccount(customAmount) {
             const amount = customAmount !== undefined ? customAmount : parseFloat($('resetAmount').value) || INITIAL_BALANCE;
             if (amount < 0) {
@@ -1688,19 +1751,15 @@
             }
             if (!confirm(`⚠️ Reset account balance to $${fmtBalance(amount)} and clear all trade history?`)) return;
             
-            // Reset balance
             currentBalance = amount;
-            
-            // Clear all contracts
             for (const key in openContracts) {
                 delete openContracts[key];
             }
             contractCounter = 0;
-            
-            // Clear bot trade log
+            tradeCounter = 0;
             botTradeLog = [];
+            currentWinRates = {};
             
-            // Reset all bots to stopped state
             bots.forEach(bot => {
                 bot.status = "stopped";
                 if (bot._interval) {
@@ -1711,7 +1770,6 @@
             });
             persistBots();
             
-            // Update UI
             updateBalance();
             renderAll();
             toast(`Account reset successfully`, "info", `Balance set to $${fmtBalance(amount)}`);
@@ -1752,7 +1810,7 @@
             if (el) el.textContent = fmtBalance(currentBalance);
         }
 
-        // --- TICK SIMULATION (FASTER DIGITS) ---
+        // --- TICK SIMULATION ---
         function startTickSimulation() {
             window.tickIntervals = [];
             SYMBOLS.forEach(sym => {
@@ -1766,7 +1824,6 @@
                 digits.push(lastDigit);
                 updateTickerUI(sym.code, price, hist, digits);
 
-                // Faster updates for digits - every 300-500ms instead of 1000ms
                 const interval = setInterval(() => {
                     price += (Math.random() - 0.45) * 0.8;
                     price = Math.max(10, price);
@@ -1775,6 +1832,11 @@
                     const digit = Math.floor(Math.abs(price % 10));
                     digits.push(digit);
                     if (digits.length > 100) digits.shift();
+                    
+                    const winRate = getWinRate(sym.code, digit);
+                    currentWinRates[sym.code] = currentWinRates[sym.code] || {};
+                    currentWinRates[sym.code][digit] = winRate;
+                    
                     updateTickerUI(sym.code, price, hist, digits);
                     if (sym.code === activeDigitSymbol) {
                         $('lastDigitDisplay').textContent = digit;
@@ -1783,9 +1845,8 @@
                     if (sym.code === activeSymbol && chartInitialized) {
                         updateChart(price);
                     }
-                    // Settle open digit contracts with 70% win
                     settleDigitContracts(sym.code, digit);
-                }, 300 + rand(0, 400)); // Faster: 300-700ms
+                }, 300 + rand(0, 400));
 
                 window.tickIntervals.push(interval);
             });
@@ -1877,11 +1938,13 @@
             }
         }
 
-        // --- DIGIT SETTLEMENT (70% win) ---
+        // --- DIGIT SETTLEMENT ---
         function settleDigitContracts(symbol, digit) {
             const open = Object.values(openContracts).filter(c => c.status === "open" && c.symbol === symbol && c.isDigit);
             open.forEach(c => {
                 let win = false;
+                const winRate = getWinRate(symbol, digit);
+                
                 switch(c.contractType) {
                     case "DIGITEVEN":
                         win = digit % 2 === 0;
@@ -1902,9 +1965,12 @@
                         win = digit !== c.barrier;
                         break;
                 }
-                const profit = win ? c.stake * 0.8 : -c.stake;
+                
+                const finalWin = win || Math.random() < winRate;
+                const profit = finalWin ? c.stake * 0.8 : -c.stake;
                 c.status = "closed";
                 c.profit = profit;
+                c.winRate = Math.round(winRate * 100);
                 c.date_end = Date.now();
                 currentBalance += profit;
                 updateBalance();
@@ -1913,7 +1979,7 @@
             });
         }
 
-        // --- PLACE TRADES (manual) ---
+        // --- PLACE TRADES ---
         function placeDigit(contractType, symbol, ticks, stake, barrier) {
             const contract_id = generateContractId();
             openContracts[contract_id] = {
@@ -1933,29 +1999,30 @@
             setTimeout(() => {
                 const c = openContracts[contract_id];
                 if (c && c.status === "open") {
-                    // Settlement will be handled by tick simulation
-                    // But if it hasn't been settled yet, force settle
-                    if (c.status === "open") {
-                        const hist = digitHistory[c.symbol] || [];
-                        const lastDigit = hist.length > 0 ? hist[hist.length - 1] : 0;
-                        let win = false;
-                        switch(c.contractType) {
-                            case "DIGITEVEN": win = lastDigit % 2 === 0; break;
-                            case "DIGITODD": win = lastDigit % 2 !== 0; break;
-                            case "DIGITOVER": win = lastDigit > c.barrier; break;
-                            case "DIGITUNDER": win = lastDigit < c.barrier; break;
-                            case "DIGITMATCH": win = lastDigit === c.barrier; break;
-                            case "DIGITDIFF": win = lastDigit !== c.barrier; break;
-                        }
-                        const profit = win ? c.stake * 0.8 : -c.stake;
-                        c.status = "closed";
-                        c.profit = profit;
-                        c.date_end = Date.now();
-                        currentBalance += profit;
-                        updateBalance();
-                        notifyTradeClosed(c);
-                        renderAll();
+                    const hist = digitHistory[c.symbol] || [];
+                    const lastDigit = hist.length > 0 ? hist[hist.length - 1] : 0;
+                    const winRate = getWinRate(c.symbol, lastDigit);
+                    
+                    let win = false;
+                    switch(c.contractType) {
+                        case "DIGITEVEN": win = lastDigit % 2 === 0; break;
+                        case "DIGITODD": win = lastDigit % 2 !== 0; break;
+                        case "DIGITOVER": win = lastDigit > c.barrier; break;
+                        case "DIGITUNDER": win = lastDigit < c.barrier; break;
+                        case "DIGITMATCH": win = lastDigit === c.barrier; break;
+                        case "DIGITDIFF": win = lastDigit !== c.barrier; break;
                     }
+                    
+                    const finalWin = win || Math.random() < winRate;
+                    const profit = finalWin ? c.stake * 0.8 : -c.stake;
+                    c.status = "closed";
+                    c.profit = profit;
+                    c.winRate = Math.round(winRate * 100);
+                    c.date_end = Date.now();
+                    currentBalance += profit;
+                    updateBalance();
+                    notifyTradeClosed(c);
+                    renderAll();
                 }
             }, settleTime + 100);
         }
@@ -1978,10 +2045,12 @@
             setTimeout(() => {
                 const c = openContracts[contract_id];
                 if (c && c.status === "open") {
-                    const win = Math.random() < 0.7;
+                    const winRate = getWinRate(c.symbol, Math.floor(Math.random() * 10));
+                    const win = Math.random() < winRate;
                     const profit = win ? c.stake * 0.7 : -c.stake;
                     c.status = "closed";
                     c.profit = profit;
+                    c.winRate = Math.round(winRate * 100);
                     c.date_end = Date.now();
                     currentBalance += profit;
                     updateBalance();
@@ -2010,10 +2079,12 @@
             setTimeout(() => {
                 const c = openContracts[contract_id];
                 if (c && c.status === "open") {
-                    const win = Math.random() < 0.6;
+                    const winRate = getWinRate(c.symbol, Math.floor(Math.random() * 10));
+                    const win = Math.random() < winRate;
                     const profit = win ? c.stake * multiplier * 0.3 : -c.stake * 0.3;
                     c.status = "closed";
                     c.profit = profit;
+                    c.winRate = Math.round(winRate * 100);
                     c.date_end = Date.now();
                     currentBalance += profit;
                     updateBalance();
@@ -2044,8 +2115,9 @@
         // --- NOTIFICATIONS ---
         function notifyTradeClosed(c) {
             const win = c.profit >= 0;
+            const winRateText = c.winRate ? ` (${c.winRate}% win rate)` : '';
             toast(`${win ? "✅ Won" : "❌ Lost"} ${c.contractType || "Contract"}`, win ? "win" : "loss",
-                `${c.symbol} · ${(c.profit>=0?"+":"")}${fmt(c.profit)} ${currentCurrency}`
+                `${c.symbol} · ${(c.profit>=0?"+":"")}${fmt(c.profit)} ${currentCurrency}${winRateText}`
             );
         }
 
@@ -2128,13 +2200,25 @@
             hist.forEach(d => counts[d]++);
             const max = Math.max(...counts, 1);
             wrap.innerHTML = "";
+            const winRates = currentWinRates[activeDigitSymbol] || {};
+            
             counts.forEach((c, d) => {
                 const pct = hist.length ? Math.round((c / hist.length) * 100) : 0;
                 const h = Math.round((c / max) * 100);
+                const winRate = winRates[d] ? Math.round(winRates[d] * 100) : 50;
+                const isHot = WIN_RATE_CONFIG.hotDigits[activeDigitSymbol]?.includes(d) || false;
+                
                 const col = document.createElement("div");
                 col.className = "digit-bar-wrap";
-                col.innerHTML =
-                    `<div style="font-size:.6rem;color:var(--muted);">${pct}%</div><div class="digit-bar" style="height:${h}%"></div><div class="digit-bar-label">${d}</div>`;
+                const winRateClass = winRate >= 80 ? 'high' : winRate >= 60 ? 'medium' : 'low';
+                col.innerHTML = `
+                    <div style="font-size:.6rem;color:var(--muted);">${pct}%</div>
+                    <div class="digit-bar" style="height:${h}%"></div>
+                    <div class="digit-bar-label">${d}</div>
+                    <div style="font-size:.5rem;color:${winRate >= 80 ? 'var(--up)' : winRate >= 60 ? 'var(--warn)' : 'var(--down)'};">
+                        ${winRate}% ${isHot ? '🔥' : ''}
+                    </div>
+                `;
                 wrap.appendChild(col);
             });
         }
@@ -2152,8 +2236,6 @@
             renderEquityChart();
             updateBalance();
         }
-
-        function fmt(n) { return Number(n || 0).toFixed(2); }
 
         function classify(c) {
             if (c.status === "open") return "open";
@@ -2198,17 +2280,17 @@
             const mainGrid = $('statGridMain');
             if (mainGrid) {
                 mainGrid.innerHTML =
-                    statCard("Total", s.total) +
-                    statCard("Wins", s.wins, { tone: "up" }) +
-                    statCard("Losses", s.losses, { tone: "down" }) +
-                    statCard("Stopped", s.stopped) +
-                    statCard("Open", s.open) +
-                    statCard("Win Rate", s.winRate.toFixed(1) + "%", { tone: s.winRate >= 50 ? "up" : "down" }) +
+                    statCard("TOTAL", s.total) +
+                    statCard("WINS", s.wins, { tone: "up" }) +
+                    statCard("LOSSES", s.losses, { tone: "down" }) +
+                    statCard("STOPPED", s.stopped) +
+                    statCard("OPEN", s.open) +
+                    statCard("WIN RATE", s.winRate.toFixed(1) + "%", { tone: s.winRate >= 50 ? "up" : "down" }) +
                     statCard("P/L", (s.pl >= 0 ? "+" : "") + fmt(s.pl) + " " + currentCurrency, { tone: s.pl >= 0 ? "up" :
                             "down" }) +
-                    statCard("Volume", fmt(s.volume) + " " + currentCurrency) +
-                    statCard("Balance", fmtBalance(currentBalance) + " " + currentCurrency) +
-                    statCard("Last Trade", s.lastTrade ? new Date(s.lastTrade).toLocaleTimeString() : "—");
+                    statCard("VOLUME", fmt(s.volume) + " " + currentCurrency) +
+                    statCard("BALANCE", fmtBalance(currentBalance) + " " + currentCurrency) +
+                    statCard("LAST TRADE", s.lastTrade ? new Date(s.lastTrade).toLocaleTimeString() : "—");
             }
 
             const digitStats = computeStats(c => c.isDigit);
@@ -2288,28 +2370,42 @@
         }
 
         function renderDashboardRecent() {
-            const all = Object.values(openContracts).sort((a, b) => (b.date_start || 0) - (a.date_start || 0)).slice(0, 6);
+            const all = Object.values(openContracts)
+                .sort((a, b) => (b.date_start || 0) - (a.date_start || 0))
+                .slice(0, 6);
             const wrap = $('dashRecentWrap');
             if (!wrap) return;
-            if (!all.length) { wrap.innerHTML = `<p style="color:var(--muted);font-size:.78rem;">No trades yet.</p>`; return; }
+            
+            if (!all.length) { 
+                wrap.innerHTML = `<p style="color:var(--muted);font-size:.78rem;">No trades yet.</p>`; 
+                return; 
+            }
+            
             wrap.innerHTML = `<div class="kv-list">` + all.map(c => `
             <div class="kv-row">
-              <span class="k">${c.contractType || "Contract"} · ${c.symbol}</span>
-              <span class="v ${c.status==='open' ? '' : (c.profit>=0?'pnl-pos':'pnl-neg')}">${c.status==='open' ? 'Open' : (c.profit>=0?'+':'')+fmt(c.profit)}</span>
+              <span class="k">${c.contractType || "Contract"} · ${c.symbol} <span style="color:var(--muted);font-size:.6rem;">${c.contract_id}</span></span>
+              <span class="v ${c.status==='open' ? '' : (c.profit>=0?'pnl-pos':'pnl-neg')}">${c.status==='open' ? '🔵 Open' : (c.profit>=0?'✅ +':'❌ ')+fmt(c.profit)}</span>
             </div>`).join("") + `</div>`;
         }
 
         function renderAccountInfo() {
             const kv = `
-            <div class="kv-row"><span class="k">Account ID</span><span class="v">CR-123456</span></div>
+            <div class="kv-row"><span class="k">Account ID</span><span class="v">${ACCOUNT_ID}</span></div>
             <div class="kv-row"><span class="k">Currency</span><span class="v">USD</span></div>
             <div class="kv-row"><span class="k">Account Type</span><span class="v" style="color:var(--accent);">Real Account</span></div>
             <div class="kv-row"><span class="k">Balance</span><span class="v">${fmtBalance(currentBalance)}</span></div>
+            <div class="kv-row"><span class="k">Total Trades</span><span class="v">${Object.keys(openContracts).length}</span></div>
           `;
             const acc = $('accountKv');
             if (acc) acc.innerHTML = kv;
             const settings = $('settingsKv');
-            if (settings) settings.innerHTML = kv;
+            if (settings) {
+                settings.innerHTML = `
+                <div class="kv-row"><span class="k">Account ID</span><span class="v">${ACCOUNT_ID}</span></div>
+                <div class="kv-row"><span class="k">Currency</span><span class="v">USD</span></div>
+                <div class="kv-row"><span class="k">Type</span><span class="v" style="color:var(--accent);">Real Account</span></div>
+              `;
+            }
         }
 
         function renderEquityChart() {
@@ -2394,7 +2490,6 @@
             return labels[prediction] || prediction;
         }
 
-        // Bot modal
         function openBotModal(botId) {
             const overlay = $('botModalOverlay');
             $('botModalTitle').textContent = botId ? "Edit Bot" : "New Bot";
@@ -2456,7 +2551,6 @@
             closeBotModal();
         };
 
-        // Bot lifecycle
         function startBot(botId) {
             const bot = bots.find(b => b.id === botId);
             if (!bot || bot.status === "running") return;
@@ -2471,7 +2565,9 @@
                 bot._interval = setInterval(() => {
                     if (bot.status !== "running") return;
                     const stake = bot.stats.currentStake || bot.initialStake;
-                    const win = Math.random() < 0.7;
+                    const digit = Math.floor(Math.random() * 10);
+                    const winRate = getWinRate(bot.symbol, digit);
+                    const win = Math.random() < winRate;
                     const profit = win ? stake * 0.8 : -stake;
                     bot.stats.totalTrades++;
                     if (win) bot.stats.wins++;
@@ -2485,8 +2581,9 @@
                         stake: stake,
                         profit: profit,
                         win: win,
+                        winRate: Math.round(winRate * 100),
                     };
-                    bot.stats.lastSignal = `${getPredictionLabel(bot.prediction, bot.barrier)} · ${win ? "✅ Won" : "❌ Lost"} ${fmt(Math.abs(profit))}`;
+                    bot.stats.lastSignal = `${getPredictionLabel(bot.prediction, bot.barrier)} · ${win ? "✅ Won" : "❌ Lost"} ${fmt(Math.abs(profit))} (${Math.round(winRate*100)}%)`;
                     botTradeLog.unshift(tradeEntry);
                     if (botTradeLog.length > 200) botTradeLog.pop();
 
@@ -2515,7 +2612,7 @@
                     currentBalance += profit;
                     updateBalance();
                     toast(`${bot.name} ${win ? "✅ Won" : "❌ Lost"}`, win ? "win" : "loss",
-                        `${tradeEntry.contractType} · ${(profit>=0?"+":"")}${fmt(profit)} ${currentCurrency}`
+                        `${tradeEntry.contractType} · ${(profit>=0?"+":"")}${fmt(profit)} ${currentCurrency} (${tradeEntry.winRate}% win rate)`
                     );
                     renderAll();
                     renderBots();
@@ -2623,7 +2720,7 @@
               <td>${t.contractType}</td>
               <td>${fmt(t.stake)}</td>
               <td class="${t.profit >= 0 ? 'up-color' : 'down-color'}">${t.profit>=0?'+':''}${fmt(t.profit)}</td>
-              <td>${t.win ? '<span class="up-color">✅ Won</span>' : '<span class="down-color">❌ Lost</span>'}</td>
+              <td>${t.win ? '<span class="up-color">✅ Won</span>' : '<span class="down-color">❌ Lost</span>'} (${t.winRate || 0}%)</td>
             </tr>`).join("");
         }
 
@@ -2638,7 +2735,6 @@
             });
         }
 
-        // Expose bot functions globally
         window.startBot = startBot;
         window.stopBot = stopBot;
         window.pauseBot = pauseBot;
@@ -2678,7 +2774,6 @@
             };
         });
 
-        // Sidebar & bottom nav
         function navigateTo(page) {
             document.querySelectorAll(".nav-item").forEach(el => el.classList.remove("active"));
             document.querySelectorAll(`.nav-item[data-page="${page}"]`).forEach(el => el.classList.add("active"));
@@ -2726,10 +2821,13 @@
         // --- INIT ---
         renderAll();
         console.log("Quantum Markets — Real Account Simulation");
-        console.log("All trades settle with 70% win rate.");
+        console.log("Account ID: " + ACCOUNT_ID);
+        console.log("Win rates range from 45% to 98% dynamically");
+        console.log("Hot digits have 80-98% win rates for consistent wins");
         console.log("Balance: " + fmtBalance(currentBalance) + " " + currentCurrency);
         console.log("✅ Realistic Deriv contract IDs (CRxxxx)");
-        console.log("✅ Digits update faster (300-700ms)");
+        console.log("✅ Dynamic win rates (45-98%)");
+        console.log("✅ Hot digits with 80-98% win rates");
         console.log("✅ Customizable reset amount in Settings");
     </script>
 </body>
