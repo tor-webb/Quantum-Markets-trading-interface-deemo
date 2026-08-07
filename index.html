@@ -1004,16 +1004,21 @@
   async function pkceChallenge(verifier){ return "challenge"; }
 
   // ----- LOGIN (simulated) -----
-  async function loginWithDeriv(){
+  window.loginWithDeriv = function() {
     document.getElementById("gate").classList.add("hidden");
     document.getElementById("terminal").style.display = "block";
     document.getElementById("rf-cur").textContent = currentCurrency;
     document.getElementById("mult-cur").textContent = currentCurrency;
     document.querySelectorAll(".digit-cur").forEach(el => el.textContent = currentCurrency);
-    renderAccountInfo();
+    
+    // Initialize everything
+    initTickerStrip();
+    initChart();
     simulateWebSocket();
     enableTradeButtons();
-  }
+    renderAll();
+  };
+
   document.getElementById("loginBtn").onclick = (e) => { e.preventDefault(); loginWithDeriv(); };
 
   function doLogout(){
@@ -1062,7 +1067,6 @@
       }, 1000 + Math.random() * 800);
     });
 
-    initChart();
     loadChart(activeSymbol, activeTF);
     renderAll();
   }
@@ -1935,7 +1939,9 @@
   });
 
   // ----- INIT -----
+  // Initialize ticker strip and chart on load
   initTickerStrip();
+  initChart();
   renderAll();
 </script>
 </body>
