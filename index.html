@@ -98,7 +98,7 @@
             z-index: 0;
         }
         .gate-container {
-            max-width: 480px;
+            max-width: 440px;
             width: 100%;
             position: relative;
             z-index: 1;
@@ -153,7 +153,7 @@
             border: 1px solid rgba(0, 217, 192, .2);
         }
         .gate-card h1 {
-            font-size: 2.2rem;
+            font-size: 2rem;
             font-weight: 700;
             margin: 8px 0 12px;
             font-family: 'Space Grotesk', sans-serif;
@@ -195,6 +195,38 @@
             color: var(--muted);
             font-weight: 500;
         }
+
+        .gate-card .input-group {
+            position: relative;
+            margin-bottom: 12px;
+        }
+        .gate-card .input-group .input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted);
+            font-size: 1rem;
+        }
+        .gate-card .input-group input {
+            width: 100%;
+            padding: 14px 14px 14px 44px;
+            border-radius: 12px;
+            background: var(--panel-3);
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-size: .95rem;
+            transition: border-color .2s;
+            font-family: 'Inter', sans-serif;
+        }
+        .gate-card .input-group input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        .gate-card .input-group input::placeholder {
+            color: var(--muted);
+        }
+
         .gate-card .btn-primary {
             width: 100%;
             padding: 16px;
@@ -207,6 +239,7 @@
             cursor: pointer;
             transition: all .25s;
             box-shadow: 0 4px 20px rgba(0, 217, 192, .25);
+            margin-top: 4px;
         }
         .gate-card .btn-primary:hover {
             transform: translateY(-2px);
@@ -215,30 +248,25 @@
         .gate-card .btn-primary:active {
             transform: scale(.97);
         }
-        .gate-card .email-input {
-            width: 100%;
-            padding: 14px 16px;
-            border-radius: 12px;
-            background: var(--panel-3);
-            border: 1px solid var(--border);
-            color: var(--text);
-            font-size: .95rem;
-            margin-bottom: 12px;
-            transition: border-color .2s;
-            font-family: 'Inter', sans-serif;
+        .gate-card .btn-primary:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+            transform: none;
         }
-        .gate-card .email-input:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
-        .gate-card .email-input::placeholder {
-            color: var(--muted);
-        }
+
         .gate-status {
             color: var(--muted);
             font-size: .78rem;
             margin-top: 12px;
+            min-height: 20px;
         }
+        .gate-status.error {
+            color: var(--down);
+        }
+        .gate-status.success {
+            color: var(--up);
+        }
+
         .gate-card .demo-note {
             font-size: .7rem;
             color: var(--muted);
@@ -1392,20 +1420,19 @@
             margin-top: 8px;
         }
 
-        /* Bot prediction selector enhancement */
         .bot-prediction-group {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr 1fr 1fr;
             gap: 6px;
         }
         .bot-prediction-group .pred-opt {
             background: var(--panel-3);
             border: 1px solid var(--border);
             border-radius: 6px;
-            padding: 8px 6px;
+            padding: 8px 4px;
             text-align: center;
             cursor: pointer;
-            font-size: .7rem;
+            font-size: .65rem;
             color: var(--muted);
             transition: all .15s;
         }
@@ -1419,8 +1446,41 @@
         }
         .bot-prediction-group .pred-opt .p-icon {
             display: block;
-            font-size: 1.1rem;
+            font-size: 1rem;
             margin-bottom: 2px;
+        }
+
+        .gate-card .login-error {
+            color: var(--down);
+            font-size: .78rem;
+            margin-top: 8px;
+            min-height: 20px;
+        }
+        .gate-card .login-error.hidden {
+            display: none;
+        }
+
+        /* Loading spinner */
+        .spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(0, 32, 28, .3);
+            border-radius: 50%;
+            border-top-color: #00201C;
+            animation: spin .6s linear infinite;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        .btn-primary .spinner {
+            width: 16px;
+            height: 16px;
+            border-width: 2px;
         }
     </style>
 </head>
@@ -1452,10 +1512,21 @@
                     </div>
                 </div>
 
-                <input type="email" class="email-input" id="loginEmail" placeholder="Enter your email" value="iankarani29@gmail.com">
-                <button class="btn-primary" id="loginBtn">🚀 Launch Real Account</button>
+                <div class="input-group">
+                    <span class="input-icon">📧</span>
+                    <input type="email" id="loginEmail" placeholder="Email address" value="iankarani29@gmail.com">
+                </div>
+                <div class="input-group">
+                    <span class="input-icon">🔒</span>
+                    <input type="password" id="loginPassword" placeholder="Password" value="quantum2024">
+                </div>
+
+                <button class="btn-primary" id="loginBtn">
+                    <span id="loginBtnText">🚀 Launch Real Account</span>
+                </button>
+                <div class="login-error hidden" id="loginError">Invalid credentials. Please try again.</div>
                 <div class="gate-status" id="gateStatus"></div>
-                <div class="demo-note">Secure OAuth · Real-time execution · Demo balance: $10,000</div>
+                <div class="demo-note">Secure OAuth · Real-time execution · Institutional-grade platform</div>
             </div>
         </div>
     </div>
@@ -1705,7 +1776,7 @@
                         <div class="card">
                             <div class="section-title" style="margin-bottom:8px;">Reset Balance</div>
                             <div class="reset-section">
-                                <p style="color:var(--muted);font-size:.75rem;margin-bottom:10px;">Set your demo balance to any amount.</p>
+                                <p style="color:var(--muted);font-size:.75rem;margin-bottom:10px;">Set your account balance to any amount.</p>
                                 <div class="reset-input-group">
                                     <input type="number" id="resetAmount" value="10000" min="100" step="100">
                                     <button class="reset-btn" id="resetBalanceBtn">Reset</button>
@@ -1804,6 +1875,7 @@
         //  All trades settle with 70% win / 30% loss ratio.
         //  "Real Account" label with reset balance in Settings.
         //  Bots support: Even, Odd, Over, Under, Match, Differ.
+        //  Login requires email + password (demo: quantum2024)
         // ============================================================
 
         // --- CONFIG ---
@@ -1844,7 +1916,10 @@
         const gate = $('gate');
         const terminal = $('terminal');
         const loginBtn = $('loginBtn');
+        const loginBtnText = $('loginBtnText');
         const loginEmail = $('loginEmail');
+        const loginPassword = $('loginPassword');
+        const loginError = $('loginError');
         const gateStatus = $('gateStatus');
         const balanceDisplay = $('balanceDisplay');
         const connDot = $('connDot');
@@ -1876,27 +1951,62 @@
         // --- LOGIN ---
         function loginWithDeriv() {
             const email = loginEmail.value.trim();
-            if (!email || !email.includes('@')) {
-                gateStatus.textContent = '⚠️ Please enter a valid email.';
-                return;
-            }
-            gateStatus.textContent = '✅ Connected as ' + email;
-            gate.classList.add('hidden');
-            terminal.classList.add('active');
-            connDot.classList.add('live');
-            isLoggedIn = true;
-            updateBalance();
-            initTickerStrip();
-            initChart();
-            loadChart(activeSymbol, activeTF);
-            enableTradeButtons();
-            renderAll();
-            startTickSimulation();
-            toast('Welcome ' + email.split('@')[0] + '!', 'win', 'Real account loaded with $' + fmtBalance(currentBalance));
+            const password = loginPassword.value.trim();
+
+            // Show loading state
+            loginBtn.disabled = true;
+            loginBtnText.innerHTML = '<span class="spinner"></span> Connecting...';
+            loginError.classList.add('hidden');
+
+            // Simulate authentication delay
+            setTimeout(() => {
+                // Demo credentials: email can be anything, password must be "quantum2024"
+                if (!email || !email.includes('@')) {
+                    loginBtn.disabled = false;
+                    loginBtnText.textContent = '🚀 Launch Real Account';
+                    loginError.textContent = '⚠️ Please enter a valid email.';
+                    loginError.classList.remove('hidden');
+                    return;
+                }
+
+                if (password !== 'quantum2024') {
+                    loginBtn.disabled = false;
+                    loginBtnText.textContent = '🚀 Launch Real Account';
+                    loginError.textContent = '❌ Invalid password. Try: quantum2024';
+                    loginError.classList.remove('hidden');
+                    return;
+                }
+
+                // Success!
+                loginError.classList.add('hidden');
+                gateStatus.textContent = '✅ Connected as ' + email;
+                gateStatus.className = 'gate-status success';
+                gate.classList.add('hidden');
+                terminal.classList.add('active');
+                connDot.classList.add('live');
+                isLoggedIn = true;
+                updateBalance();
+                initTickerStrip();
+                initChart();
+                loadChart(activeSymbol, activeTF);
+                enableTradeButtons();
+                renderAll();
+                startTickSimulation();
+                toast('Welcome ' + email.split('@')[0] + '!', 'win', 'Real account loaded with $' + fmtBalance(
+                currentBalance));
+
+                // Reset button state
+                loginBtn.disabled = false;
+                loginBtnText.textContent = '🚀 Launch Real Account';
+
+            }, 1200);
         }
 
         loginBtn.onclick = loginWithDeriv;
+
+        // Enter key support
         loginEmail.addEventListener('keydown', (e) => { if (e.key === 'Enter') loginWithDeriv(); });
+        loginPassword.addEventListener('keydown', (e) => { if (e.key === 'Enter') loginWithDeriv(); });
 
         // --- LOGOUT ---
         function doLogout() {
@@ -1908,6 +2018,10 @@
                 window.tickIntervals = [];
             }
             gateStatus.textContent = '';
+            gateStatus.className = 'gate-status';
+            loginError.classList.add('hidden');
+            loginBtn.disabled = false;
+            loginBtnText.textContent = '🚀 Launch Real Account';
         }
         $('logoutBtn').onclick = doLogout;
         $('logoutBtn2').onclick = doLogout;
@@ -2536,7 +2650,6 @@
             $('bot-name').value = bot ? bot.name : "";
             $('bot-symbol').value = bot ? bot.symbol : activeSymbol;
 
-            // Set prediction
             const pred = bot ? bot.prediction : "DIGITEVEN";
             $('bot-prediction').value = pred;
             document.querySelectorAll('#botPredictionGroup .pred-opt').forEach(el => {
@@ -2626,7 +2739,8 @@
                         profit: profit,
                         win: win,
                     };
-                    bot.stats.lastSignal = `${PREDICTION_LABELS[bot.prediction] || bot.prediction} · ${win ? "✅ Won" : "❌ Lost"} ${fmt(Math.abs(profit))}`;
+                    bot.stats.lastSignal =
+                        `${PREDICTION_LABELS[bot.prediction] || bot.prediction} · ${win ? "✅ Won" : "❌ Lost"} ${fmt(Math.abs(profit))}`;
                     botTradeLog.unshift(tradeEntry);
                     if (botTradeLog.length > 200) botTradeLog.pop();
 
@@ -2867,6 +2981,7 @@
         console.log("All trades settle with 70% win rate.");
         console.log("Balance: " + fmtBalance(currentBalance) + " " + currentCurrency);
         console.log("Bots support: Even, Odd, Over, Under, Match, Differ");
+        console.log("Login: email + password (quantum2024)");
     </script>
 </body>
 </html>
