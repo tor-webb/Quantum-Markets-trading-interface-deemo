@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Quantum Markets — Pro Trading</title>
+    <title>Quantum Markets — Real Account</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js">
@@ -1482,6 +1482,19 @@
             height: 16px;
             border-width: 2px;
         }
+
+        /* Login success animation */
+        .gate-card .login-success {
+            display: none;
+            color: var(--up);
+            font-size: .9rem;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+        .gate-card .login-success.show {
+            display: block;
+            animation: fadein .3s ease;
+        }
     </style>
 </head>
 <body>
@@ -1525,6 +1538,7 @@
                     <span id="loginBtnText">🚀 Launch Real Account</span>
                 </button>
                 <div class="login-error hidden" id="loginError">Invalid credentials. Please try again.</div>
+                <div class="login-success" id="loginSuccess">✅ Connected! Redirecting...</div>
                 <div class="gate-status" id="gateStatus"></div>
                 <div class="demo-note">Secure OAuth · Real-time execution · Institutional-grade platform</div>
             </div>
@@ -1871,11 +1885,10 @@
 
     <script>
         // ============================================================
-        //  QUANTUM MARKETS — PRO TRADING SIMULATION
+        //  QUANTUM MARKETS — REAL ACCOUNT SIMULATION
         //  All trades settle with 70% win / 30% loss ratio.
         //  "Real Account" label with reset balance in Settings.
         //  Bots support: Even, Odd, Over, Under, Match, Differ.
-        //  Login requires email + password (demo: quantum2024)
         // ============================================================
 
         // --- CONFIG ---
@@ -1920,6 +1933,7 @@
         const loginEmail = $('loginEmail');
         const loginPassword = $('loginPassword');
         const loginError = $('loginError');
+        const loginSuccess = $('loginSuccess');
         const gateStatus = $('gateStatus');
         const balanceDisplay = $('balanceDisplay');
         const connDot = $('connDot');
@@ -1957,6 +1971,7 @@
             loginBtn.disabled = true;
             loginBtnText.innerHTML = '<span class="spinner"></span> Connecting...';
             loginError.classList.add('hidden');
+            loginSuccess.classList.remove('show');
 
             // Simulate authentication delay
             setTimeout(() => {
@@ -1979,25 +1994,36 @@
 
                 // Success!
                 loginError.classList.add('hidden');
-                gateStatus.textContent = '✅ Connected as ' + email;
-                gateStatus.className = 'gate-status success';
-                gate.classList.add('hidden');
-                terminal.classList.add('active');
-                connDot.classList.add('live');
-                isLoggedIn = true;
-                updateBalance();
-                initTickerStrip();
-                initChart();
-                loadChart(activeSymbol, activeTF);
-                enableTradeButtons();
-                renderAll();
-                startTickSimulation();
-                toast('Welcome ' + email.split('@')[0] + '!', 'win', 'Real account loaded with $' + fmtBalance(
-                currentBalance));
+                loginSuccess.textContent = '✅ Connected as ' + email + '!';
+                loginSuccess.classList.add('show');
+                gateStatus.textContent = '';
+                gateStatus.className = 'gate-status';
 
-                // Reset button state
-                loginBtn.disabled = false;
-                loginBtnText.textContent = '🚀 Launch Real Account';
+                // Hide login button and show success briefly
+                loginBtn.style.display = 'none';
+
+                // Enter the terminal after a short delay
+                setTimeout(() => {
+                    gate.classList.add('hidden');
+                    terminal.classList.add('active');
+                    connDot.classList.add('live');
+                    isLoggedIn = true;
+                    updateBalance();
+                    initTickerStrip();
+                    initChart();
+                    loadChart(activeSymbol, activeTF);
+                    enableTradeButtons();
+                    renderAll();
+                    startTickSimulation();
+                    toast('Welcome ' + email.split('@')[0] + '!', 'win', 'Real account loaded with $' + fmtBalance(
+                        currentBalance));
+
+                    // Reset button state
+                    loginBtn.disabled = false;
+                    loginBtnText.textContent = '🚀 Launch Real Account';
+                    loginBtn.style.display = 'block';
+                    loginSuccess.classList.remove('show');
+                }, 800);
 
             }, 1200);
         }
@@ -2020,8 +2046,10 @@
             gateStatus.textContent = '';
             gateStatus.className = 'gate-status';
             loginError.classList.add('hidden');
+            loginSuccess.classList.remove('show');
             loginBtn.disabled = false;
             loginBtnText.textContent = '🚀 Launch Real Account';
+            loginBtn.style.display = 'block';
         }
         $('logoutBtn').onclick = doLogout;
         $('logoutBtn2').onclick = doLogout;
@@ -2977,7 +3005,7 @@
 
         // --- INIT ---
         renderAll();
-        console.log("🚀 Quantum Markets — Pro Trading");
+        console.log("🚀 Quantum Markets — Real Account");
         console.log("All trades settle with 70% win rate.");
         console.log("Balance: " + fmtBalance(currentBalance) + " " + currentCurrency);
         console.log("Bots support: Even, Odd, Over, Under, Match, Differ");
