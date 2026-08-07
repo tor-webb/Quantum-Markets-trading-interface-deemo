@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Quantum Markets — Real Account</title>
+    <title>Quantum Markets — Real Account Trading</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js">
@@ -30,7 +30,6 @@
             --warn: #FFB020;
             --shadow: 0 8px 32px rgba(0, 0, 0, .5);
             --shadow-sm: 0 2px 8px rgba(0, 0, 0, .3);
-            --glow: 0 0 30px rgba(0, 217, 192, .15);
         }
         html,
         body {
@@ -73,218 +72,14 @@
             text-decoration: none;
         }
 
-        /* ===== LANDING PAGE ===== */
-        #gate {
-            background: var(--bg);
-            min-height: 100vh;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            position: relative;
-        }
-        #gate::before {
-            content: '';
-            position: fixed;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(ellipse at 30% 40%, rgba(0, 217, 192, .04) 0%, transparent 60%),
-                radial-gradient(ellipse at 70% 60%, rgba(0, 217, 192, .02) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: 0;
-        }
-        .gate-container {
-            max-width: 440px;
-            width: 100%;
-            position: relative;
-            z-index: 1;
-        }
-        .gate-card {
-            background: linear-gradient(145deg, var(--panel), var(--panel-2));
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 40px 32px;
-            box-shadow: var(--shadow), var(--glow);
-            text-align: center;
-            backdrop-filter: blur(10px);
-        }
-        .gate-card .logo {
-            font-size: 1.8rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            margin-bottom: 8px;
-        }
-        .gate-card .logo .dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: var(--accent);
-            box-shadow: 0 0 20px var(--accent);
-            animation: pulse 2s ease-in-out infinite;
-        }
-        @keyframes pulse {
-            0%,
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-            50% {
-                opacity: .4;
-                transform: scale(.8);
-            }
-        }
-        .gate-card .badge {
-            display: inline-block;
-            background: var(--accent-dim);
-            color: var(--accent);
-            font-size: .7rem;
-            font-weight: 700;
-            padding: 4px 14px;
-            border-radius: 20px;
-            letter-spacing: .08em;
-            text-transform: uppercase;
-            margin-bottom: 12px;
-            border: 1px solid rgba(0, 217, 192, .2);
-        }
-        .gate-card h1 {
-            font-size: 2rem;
-            font-weight: 700;
-            margin: 8px 0 12px;
-            font-family: 'Space Grotesk', sans-serif;
-            background: linear-gradient(135deg, #fff 30%, var(--accent));
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            line-height: 1.1;
-        }
-        .gate-card p {
-            color: var(--muted);
-            font-size: .92rem;
-            line-height: 1.6;
-            margin-bottom: 24px;
-            max-width: 380px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .gate-card .features-mini {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 8px;
-            margin-bottom: 24px;
-            padding: 0 4px;
-        }
-        .gate-card .features-mini .fm {
-            background: var(--panel-3);
-            border-radius: 10px;
-            padding: 10px 6px;
-            border: 1px solid var(--border-soft);
-        }
-        .gate-card .features-mini .fm .icon {
-            font-size: 1.4rem;
-            display: block;
-            margin-bottom: 2px;
-        }
-        .gate-card .features-mini .fm .label {
-            font-size: .6rem;
-            color: var(--muted);
-            font-weight: 500;
-        }
-
-        .gate-card .input-group {
-            position: relative;
-            margin-bottom: 12px;
-        }
-        .gate-card .input-group .input-icon {
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--muted);
-            font-size: 1rem;
-        }
-        .gate-card .input-group input {
-            width: 100%;
-            padding: 14px 14px 14px 44px;
-            border-radius: 12px;
-            background: var(--panel-3);
-            border: 1px solid var(--border);
-            color: var(--text);
-            font-size: .95rem;
-            transition: border-color .2s;
-            font-family: 'Inter', sans-serif;
-        }
-        .gate-card .input-group input:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
-        .gate-card .input-group input::placeholder {
-            color: var(--muted);
-        }
-
-        .gate-card .btn-primary {
-            width: 100%;
-            padding: 16px;
-            font-size: 1.05rem;
-            border-radius: 14px;
-            background: linear-gradient(135deg, var(--accent), #00B8A0);
-            color: #00201C;
-            border: none;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all .25s;
-            box-shadow: 0 4px 20px rgba(0, 217, 192, .25);
-            margin-top: 4px;
-        }
-        .gate-card .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 30px rgba(0, 217, 192, .35);
-        }
-        .gate-card .btn-primary:active {
-            transform: scale(.97);
-        }
-        .gate-card .btn-primary:disabled {
-            opacity: .5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .gate-status {
-            color: var(--muted);
-            font-size: .78rem;
-            margin-top: 12px;
-            min-height: 20px;
-        }
-        .gate-status.error {
-            color: var(--down);
-        }
-        .gate-status.success {
-            color: var(--up);
-        }
-
-        .gate-card .demo-note {
-            font-size: .7rem;
-            color: var(--muted);
-            margin-top: 14px;
-            opacity: .6;
-        }
-
         /* ===== TERMINAL ===== */
         #terminal {
-            display: none;
+            display: flex;
             height: 100vh;
             width: 100%;
             overflow: hidden;
             flex-direction: column;
             background: var(--bg);
-        }
-        #terminal.active {
-            display: flex;
         }
 
         /* Top Bar */
@@ -331,12 +126,9 @@
             width: 8px;
             height: 8px;
             border-radius: 50%;
-            background: var(--muted);
+            background: var(--up);
             display: inline-block;
             flex-shrink: 0;
-        }
-        .topbar .conn-dot.live {
-            background: var(--up);
             box-shadow: 0 0 10px var(--up);
         }
         .topbar .btn-sm {
@@ -363,11 +155,6 @@
         }
         .topbar .btn-sm.danger:hover {
             opacity: .8;
-        }
-        .topbar .btn-sm.accent {
-            background: var(--accent);
-            color: #00201C;
-            border-color: var(--accent);
         }
 
         /* Bottom Nav */
@@ -434,6 +221,17 @@
             background: var(--accent);
             box-shadow: 0 0 10px var(--accent);
             animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: .4;
+                transform: scale(.8);
+            }
         }
         .sidebar .nav-item {
             display: flex;
@@ -1293,22 +1091,6 @@
                 max-width: 100%;
                 margin-top: 10px;
             }
-            .gate-card {
-                padding: 28px 20px;
-            }
-            .gate-card h1 {
-                font-size: 1.6rem;
-            }
-            .gate-card .features-mini {
-                grid-template-columns: 1fr 1fr 1fr;
-                gap: 4px;
-            }
-            .gate-card .features-mini .fm {
-                padding: 8px 4px;
-            }
-            .gate-card .features-mini .fm .icon {
-                font-size: 1.1rem;
-            }
         }
         @media(min-width:701px) {
             .bottom-nav {
@@ -1327,9 +1109,6 @@
             .field select {
                 font-size: .7rem;
                 padding: 6px 8px;
-            }
-            .gate-card h1 {
-                font-size: 1.3rem;
             }
         }
 
@@ -1449,101 +1228,9 @@
             font-size: 1rem;
             margin-bottom: 2px;
         }
-
-        .gate-card .login-error {
-            color: var(--down);
-            font-size: .78rem;
-            margin-top: 8px;
-            min-height: 20px;
-        }
-        .gate-card .login-error.hidden {
-            display: none;
-        }
-
-        /* Loading spinner */
-        .spinner {
-            display: inline-block;
-            width: 18px;
-            height: 18px;
-            border: 2px solid rgba(0, 32, 28, .3);
-            border-radius: 50%;
-            border-top-color: #00201C;
-            animation: spin .6s linear infinite;
-            vertical-align: middle;
-            margin-right: 8px;
-        }
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-        .btn-primary .spinner {
-            width: 16px;
-            height: 16px;
-            border-width: 2px;
-        }
-
-        /* Login success animation */
-        .gate-card .login-success {
-            display: none;
-            color: var(--up);
-            font-size: .9rem;
-            font-weight: 600;
-            margin-top: 8px;
-        }
-        .gate-card .login-success.show {
-            display: block;
-            animation: fadein .3s ease;
-        }
     </style>
 </head>
 <body>
-
-    <!-- ===== LANDING PAGE ===== -->
-    <div id="gate">
-        <div class="gate-container">
-            <div class="gate-card">
-                <div class="logo brand">
-                    <span class="dot"></span> QUANTUM MARKETS
-                </div>
-                <div class="badge">⚡ Pro Trading Platform</div>
-                <h1>Trade Smarter.<br>Trade Faster.</h1>
-                <p>Access synthetic indices, digits trading, and advanced analytics — all powered by Deriv's infrastructure.</p>
-
-                <div class="features-mini">
-                    <div class="fm">
-                        <span class="icon">📈</span>
-                        <span class="label">6 Indices</span>
-                    </div>
-                    <div class="fm">
-                        <span class="icon">🔢</span>
-                        <span class="label">Digits</span>
-                    </div>
-                    <div class="fm">
-                        <span class="icon">🤖</span>
-                        <span class="label">Auto Bots</span>
-                    </div>
-                </div>
-
-                <div class="input-group">
-                    <span class="input-icon">📧</span>
-                    <input type="email" id="loginEmail" placeholder="Email address" value="iankarani29@gmail.com">
-                </div>
-                <div class="input-group">
-                    <span class="input-icon">🔒</span>
-                    <input type="password" id="loginPassword" placeholder="Password" value="quantum2024">
-                </div>
-
-                <button class="btn-primary" id="loginBtn">
-                    <span id="loginBtnText">🚀 Launch Real Account</span>
-                </button>
-                <div class="login-error hidden" id="loginError">Invalid credentials. Please try again.</div>
-                <div class="login-success" id="loginSuccess">✅ Connected! Redirecting...</div>
-                <div class="gate-status" id="gateStatus"></div>
-                <div class="demo-note">Secure OAuth · Real-time execution · Institutional-grade platform</div>
-            </div>
-        </div>
-    </div>
 
     <!-- ===== TERMINAL ===== -->
     <div id="terminal">
@@ -1551,10 +1238,9 @@
         <div class="topbar">
             <div class="brand-small"><span class="dot"></span> <span>QM</span></div>
             <div class="spacer"></div>
-            <span class="conn-dot live" id="connDot"></span>
+            <span class="conn-dot" id="connDot"></span>
             <span class="balance" id="balanceDisplay">10,000.00 <span class="cur">USD</span></span>
             <button class="btn-sm danger" id="stopAllBtn">⏹ Stop All</button>
-            <button class="btn-sm" id="logoutBtn">✕</button>
         </div>
 
         <!-- Main Layout -->
@@ -1783,9 +1469,6 @@
                                 <div class="kv-row"><span class="k">Currency</span><span class="v">USD</span></div>
                                 <div class="kv-row"><span class="k">Type</span><span class="v" style="color:var(--accent);">Real Account</span></div>
                             </div>
-                            <div style="margin-top:12px;">
-                                <button class="btn btn-ghost btn-sm" id="logoutBtn2">Disconnect</button>
-                            </div>
                         </div>
                         <div class="card">
                             <div class="section-title" style="margin-bottom:8px;">Reset Balance</div>
@@ -1885,7 +1568,7 @@
 
     <script>
         // ============================================================
-        //  QUANTUM MARKETS — REAL ACCOUNT SIMULATION
+        //  QUANTUM MARKETS — REAL ACCOUNT TRADING
         //  All trades settle with 70% win / 30% loss ratio.
         //  "Real Account" label with reset balance in Settings.
         //  Bots support: Even, Odd, Over, Under, Match, Differ.
@@ -1922,19 +1605,9 @@
         let botTradeLog = [];
         let chart, candleSeries;
         let chartInitialized = false;
-        let isLoggedIn = false;
 
         // --- DOM REFS ---
         const $ = id => document.getElementById(id);
-        const gate = $('gate');
-        const terminal = $('terminal');
-        const loginBtn = $('loginBtn');
-        const loginBtnText = $('loginBtnText');
-        const loginEmail = $('loginEmail');
-        const loginPassword = $('loginPassword');
-        const loginError = $('loginError');
-        const loginSuccess = $('loginSuccess');
-        const gateStatus = $('gateStatus');
         const balanceDisplay = $('balanceDisplay');
         const connDot = $('connDot');
         const resetAmount = $('resetAmount');
@@ -1962,97 +1635,18 @@
             setTimeout(() => el.remove(), 5000);
         }
 
-        // --- LOGIN ---
-        function loginWithDeriv() {
-            const email = loginEmail.value.trim();
-            const password = loginPassword.value.trim();
-
-            // Show loading state
-            loginBtn.disabled = true;
-            loginBtnText.innerHTML = '<span class="spinner"></span> Connecting...';
-            loginError.classList.add('hidden');
-            loginSuccess.classList.remove('show');
-
-            // Simulate authentication delay
-            setTimeout(() => {
-                // Demo credentials: email can be anything, password must be "quantum2024"
-                if (!email || !email.includes('@')) {
-                    loginBtn.disabled = false;
-                    loginBtnText.textContent = '🚀 Launch Real Account';
-                    loginError.textContent = '⚠️ Please enter a valid email.';
-                    loginError.classList.remove('hidden');
-                    return;
-                }
-
-                if (password !== 'quantum2024') {
-                    loginBtn.disabled = false;
-                    loginBtnText.textContent = '🚀 Launch Real Account';
-                    loginError.textContent = '❌ Invalid password. Try: quantum2024';
-                    loginError.classList.remove('hidden');
-                    return;
-                }
-
-                // Success!
-                loginError.classList.add('hidden');
-                loginSuccess.textContent = '✅ Connected as ' + email + '!';
-                loginSuccess.classList.add('show');
-                gateStatus.textContent = '';
-                gateStatus.className = 'gate-status';
-
-                // Hide login button briefly
-                loginBtn.style.display = 'none';
-
-                // Enter the terminal after a short delay
-                setTimeout(() => {
-                    gate.classList.add('hidden');
-                    terminal.classList.add('active');
-                    connDot.classList.add('live');
-                    isLoggedIn = true;
-                    updateBalance();
-                    initTickerStrip();
-                    initChart();
-                    loadChart(activeSymbol, activeTF);
-                    enableTradeButtons();
-                    renderAll();
-                    startTickSimulation();
-                    toast('Welcome ' + email.split('@')[0] + '!', 'win', 'Real account loaded with $' + fmtBalance(
-                        currentBalance));
-
-                    // Reset button state
-                    loginBtn.disabled = false;
-                    loginBtnText.textContent = '🚀 Launch Real Account';
-                    loginBtn.style.display = 'block';
-                    loginSuccess.classList.remove('show');
-                }, 800);
-
-            }, 1200);
+        // --- INIT ---
+        function init() {
+            connDot.classList.add('live');
+            updateBalance();
+            initTickerStrip();
+            initChart();
+            loadChart(activeSymbol, activeTF);
+            enableTradeButtons();
+            renderAll();
+            startTickSimulation();
+            toast('Welcome to Quantum Markets!', 'win', 'Real account loaded with $' + fmtBalance(currentBalance));
         }
-
-        loginBtn.onclick = loginWithDeriv;
-
-        // Enter key support
-        loginEmail.addEventListener('keydown', (e) => { if (e.key === 'Enter') loginWithDeriv(); });
-        loginPassword.addEventListener('keydown', (e) => { if (e.key === 'Enter') loginWithDeriv(); });
-
-        // --- LOGOUT ---
-        function doLogout() {
-            terminal.classList.remove('active');
-            gate.classList.remove('hidden');
-            isLoggedIn = false;
-            if (window.tickIntervals) {
-                window.tickIntervals.forEach(clearInterval);
-                window.tickIntervals = [];
-            }
-            gateStatus.textContent = '';
-            gateStatus.className = 'gate-status';
-            loginError.classList.add('hidden');
-            loginSuccess.classList.remove('show');
-            loginBtn.disabled = false;
-            loginBtnText.textContent = '🚀 Launch Real Account';
-            loginBtn.style.display = 'block';
-        }
-        $('logoutBtn').onclick = doLogout;
-        $('logoutBtn2').onclick = doLogout;
 
         // --- RESET BALANCE ---
         function resetBalance() {
@@ -3003,13 +2597,12 @@
             };
         });
 
-        // --- INIT ---
-        renderAll();
+        // --- START ---
+        init();
         console.log("🚀 Quantum Markets — Real Account");
         console.log("All trades settle with 70% win rate.");
         console.log("Balance: " + fmtBalance(currentBalance) + " " + currentCurrency);
         console.log("Bots support: Even, Odd, Over, Under, Match, Differ");
-        console.log("Login: email + password (quantum2024)");
     </script>
 </body>
 </html>
