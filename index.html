@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Quantum Markets — Pro Trading</title>
+    <title>Quantum Markets — Real Account</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js">
@@ -28,9 +28,8 @@
             --up: #26D07C;
             --down: #FF5C5C;
             --warn: #FFB020;
-            --shadow: 0 8px 32px rgba(0, 0, 0, .5);
-            --shadow-sm: 0 2px 8px rgba(0, 0, 0, .3);
-            --glow: 0 0 30px rgba(0, 217, 192, .15);
+            --shadow: 0 8px 24px rgba(0, 0, 0, .35);
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, .25);
         }
         html,
         body {
@@ -73,244 +72,98 @@
             text-decoration: none;
         }
 
-        /* ===== LANDING PAGE ===== */
+        /* --- GATE --- */
         #gate {
             background: var(--bg);
             min-height: 100vh;
             overflow-y: auto;
+            padding: 16px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 20px;
-            position: relative;
         }
-        #gate::before {
-            content: '';
-            position: fixed;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(ellipse at 30% 40%, rgba(0, 217, 192, .04) 0%, transparent 60%),
-                radial-gradient(ellipse at 70% 60%, rgba(0, 217, 192, .02) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: 0;
-        }
-        .gate-container {
-            max-width: 440px;
-            width: 100%;
-            position: relative;
-            z-index: 1;
+        #gate.hidden {
+            display: none;
         }
         .gate-card {
-            background: linear-gradient(145deg, var(--panel), var(--panel-2));
+            max-width: 400px;
+            width: 100%;
+            background: var(--panel);
             border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 40px 32px;
-            box-shadow: var(--shadow), var(--glow);
+            border-radius: 20px;
+            padding: 32px 24px;
+            box-shadow: var(--shadow);
             text-align: center;
-            backdrop-filter: blur(10px);
         }
         .gate-card .logo {
-            font-size: 1.8rem;
+            font-size: 1.4rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
-            margin-bottom: 8px;
+            gap: 10px;
+            margin-bottom: 12px;
         }
         .gate-card .logo .dot {
-            width: 12px;
-            height: 12px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
             background: var(--accent);
-            box-shadow: 0 0 20px var(--accent);
+            box-shadow: 0 0 12px var(--accent);
             animation: pulse 2s ease-in-out infinite;
         }
         @keyframes pulse {
             0%,
             100% {
                 opacity: 1;
-                transform: scale(1);
             }
             50% {
-                opacity: .4;
-                transform: scale(.8);
+                opacity: .3;
             }
         }
-        .gate-card .badge {
-            display: inline-block;
-            background: var(--accent-dim);
-            color: var(--accent);
-            font-size: .7rem;
-            font-weight: 700;
-            padding: 4px 14px;
-            border-radius: 20px;
-            letter-spacing: .08em;
-            text-transform: uppercase;
-            margin-bottom: 12px;
-            border: 1px solid rgba(0, 217, 192, .2);
-        }
         .gate-card h1 {
-            font-size: 2rem;
+            font-size: 1.6rem;
             font-weight: 700;
-            margin: 8px 0 12px;
-            font-family: 'Space Grotesk', sans-serif;
-            background: linear-gradient(135deg, #fff 30%, var(--accent));
+            margin: 8px 0 6px;
+            background: linear-gradient(180deg, var(--text) 40%, var(--muted));
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
-            line-height: 1.1;
         }
         .gate-card p {
             color: var(--muted);
-            font-size: .92rem;
-            line-height: 1.6;
-            margin-bottom: 24px;
-            max-width: 380px;
-            margin-left: auto;
-            margin-right: auto;
+            font-size: .88rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
         }
-        .gate-card .features-mini {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 8px;
-            margin-bottom: 24px;
-            padding: 0 4px;
-        }
-        .gate-card .features-mini .fm {
-            background: var(--panel-3);
-            border-radius: 10px;
-            padding: 10px 6px;
-            border: 1px solid var(--border-soft);
-        }
-        .gate-card .features-mini .fm .icon {
-            font-size: 1.4rem;
-            display: block;
-            margin-bottom: 2px;
-        }
-        .gate-card .features-mini .fm .label {
-            font-size: .6rem;
-            color: var(--muted);
-            font-weight: 500;
-        }
-
-        .gate-card .input-group {
-            position: relative;
-            margin-bottom: 12px;
-        }
-        .gate-card .input-group .input-icon {
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--muted);
+        .gate-card .btn {
+            width: 100%;
+            padding: 14px;
             font-size: 1rem;
-        }
-        .gate-card .input-group input {
-            width: 100%;
-            padding: 14px 14px 14px 44px;
             border-radius: 12px;
-            background: var(--panel-3);
-            border: 1px solid var(--border);
-            color: var(--text);
-            font-size: .95rem;
-            transition: border-color .2s;
-            font-family: 'Inter', sans-serif;
-        }
-        .gate-card .input-group input:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
-        .gate-card .input-group input::placeholder {
-            color: var(--muted);
-        }
-
-        .gate-card .btn-primary {
-            width: 100%;
-            padding: 16px;
-            font-size: 1.05rem;
-            border-radius: 14px;
-            background: linear-gradient(135deg, var(--accent), #00B8A0);
+            background: var(--accent);
             color: #00201C;
             border: none;
             font-weight: 700;
             cursor: pointer;
-            transition: all .25s;
-            box-shadow: 0 4px 20px rgba(0, 217, 192, .25);
-            margin-top: 4px;
+            transition: opacity .2s;
         }
-        .gate-card .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 30px rgba(0, 217, 192, .35);
+        .gate-card .btn:active {
+            opacity: .7;
         }
-        .gate-card .btn-primary:active {
-            transform: scale(.97);
+        .gate-card .btn-ghost {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+            margin-top: 8px;
         }
-        .gate-card .btn-primary:disabled {
-            opacity: .5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
         .gate-status {
             color: var(--muted);
             font-size: .78rem;
             margin-top: 12px;
-            min-height: 20px;
-        }
-        .gate-status.error {
-            color: var(--down);
-        }
-        .gate-status.success {
-            color: var(--up);
         }
 
-        .gate-card .demo-note {
-            font-size: .7rem;
-            color: var(--muted);
-            margin-top: 14px;
-            opacity: .6;
-        }
-
-        /* Login error */
-        .gate-card .login-error {
-            color: var(--down);
-            font-size: .78rem;
-            margin-top: 8px;
-            min-height: 20px;
-            display: none;
-        }
-        .gate-card .login-error.show {
-            display: block;
-            animation: fadein .3s ease;
-        }
-
-        /* Loading spinner */
-        .spinner {
-            display: inline-block;
-            width: 18px;
-            height: 18px;
-            border: 2px solid rgba(0, 32, 28, .3);
-            border-radius: 50%;
-            border-top-color: #00201C;
-            animation: spin .6s linear infinite;
-            vertical-align: middle;
-            margin-right: 8px;
-        }
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-        .btn-primary .spinner {
-            width: 16px;
-            height: 16px;
-            border-width: 2px;
-        }
-
-        /* ===== TERMINAL ===== */
+        /* --- TERMINAL --- */
         #terminal {
             display: none;
             height: 100vh;
@@ -323,17 +176,17 @@
             display: flex;
         }
 
-        /* Top Bar */
+        /* --- TOP BAR --- */
         .topbar {
             display: flex;
             align-items: center;
             gap: 8px;
-            padding: 8px 14px;
+            padding: 8px 12px;
             background: var(--panel);
             border-bottom: 1px solid var(--border);
             flex-shrink: 0;
             flex-wrap: nowrap;
-            min-height: 50px;
+            min-height: 48px;
         }
         .topbar .brand-small {
             font-size: .9rem;
@@ -354,7 +207,7 @@
             min-width: 4px;
         }
         .topbar .balance {
-            font-size: .82rem;
+            font-size: .8rem;
             font-weight: 600;
             white-space: nowrap;
         }
@@ -373,7 +226,7 @@
         }
         .topbar .conn-dot.live {
             background: var(--up);
-            box-shadow: 0 0 10px var(--up);
+            box-shadow: 0 0 8px var(--up);
         }
         .topbar .btn-sm {
             padding: 4px 10px;
@@ -387,18 +240,11 @@
             border: 1px solid var(--border);
             white-space: nowrap;
             flex-shrink: 0;
-            transition: all .15s;
-        }
-        .topbar .btn-sm:hover {
-            border-color: var(--accent);
         }
         .topbar .btn-sm.danger {
             background: var(--down);
             color: #1A0303;
             border-color: var(--down);
-        }
-        .topbar .btn-sm.danger:hover {
-            opacity: .8;
         }
         .topbar .btn-sm.accent {
             background: var(--accent);
@@ -406,7 +252,7 @@
             border-color: var(--accent);
         }
 
-        /* Bottom Nav */
+        /* --- MOBILE BOTTOM NAV --- */
         .bottom-nav {
             display: none;
             background: var(--panel);
@@ -421,13 +267,13 @@
             flex: 1;
             text-align: center;
             padding: 6px 4px;
-            font-size: .55rem;
+            font-size: .6rem;
             color: var(--muted);
             cursor: pointer;
             border-bottom: 2px solid transparent;
             transition: color .15s, border-color .15s;
             white-space: nowrap;
-            min-width: 44px;
+            min-width: 50px;
         }
         .bottom-nav .nav-item.active {
             color: var(--accent);
@@ -439,7 +285,7 @@
             margin-bottom: 2px;
         }
 
-        /* Main Layout */
+        /* --- MAIN LAYOUT --- */
         .main-layout {
             display: flex;
             flex: 1;
@@ -531,7 +377,7 @@
             }
         }
 
-        /* Components */
+        /* --- COMPONENTS --- */
         .section-title {
             font-family: 'Space Grotesk', sans-serif;
             font-weight: 600;
@@ -897,7 +743,7 @@
             color: var(--down);
         }
 
-        /* Bots */
+        /* --- BOTS --- */
         .bots-toolbar {
             display: flex;
             align-items: center;
@@ -1023,10 +869,6 @@
             font-size: .65rem;
             cursor: pointer;
             font-family: 'Inter', sans-serif;
-            transition: all .15s;
-        }
-        .bot-controls button:hover {
-            border-color: var(--accent);
         }
         .bot-controls button.primary {
             background: var(--accent);
@@ -1045,7 +887,7 @@
             border-color: var(--warn);
         }
 
-        /* Digits */
+        /* --- DIGITS --- */
         .digit-bars {
             display: flex;
             align-items: flex-end;
@@ -1082,7 +924,7 @@
             padding: 6px 0;
         }
 
-        /* Toasts */
+        /* --- TOASTS --- */
         #toastStack {
             position: fixed;
             bottom: 12px;
@@ -1129,7 +971,7 @@
             }
         }
 
-        /* Modal */
+        /* --- MODAL --- */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -1256,12 +1098,8 @@
             font-size: .78rem;
             cursor: pointer;
             font-family: 'Inter', sans-serif;
-            transition: all .15s;
+            transition: opacity .15s, transform .1s;
             display: inline-block;
-        }
-        .btn:hover {
-            opacity: .85;
-            transform: translateY(-1px);
         }
         .btn:active {
             transform: scale(.97);
@@ -1275,10 +1113,6 @@
             border: 1px solid var(--border);
             color: var(--text);
         }
-        .btn-ghost:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-        }
         .btn-danger {
             background: var(--down);
             color: #1A0303;
@@ -1288,7 +1122,7 @@
             font-size: .65rem;
         }
 
-        /* Responsive */
+        /* --- RESPONSIVE --- */
         @media(max-width:700px) {
             .sidebar {
                 display: none;
@@ -1329,22 +1163,6 @@
                 max-width: 100%;
                 margin-top: 10px;
             }
-            .gate-card {
-                padding: 28px 20px;
-            }
-            .gate-card h1 {
-                font-size: 1.6rem;
-            }
-            .gate-card .features-mini {
-                grid-template-columns: 1fr 1fr 1fr;
-                gap: 4px;
-            }
-            .gate-card .features-mini .fm {
-                padding: 8px 4px;
-            }
-            .gate-card .features-mini .fm .icon {
-                font-size: 1.1rem;
-            }
         }
         @media(min-width:701px) {
             .bottom-nav {
@@ -1363,9 +1181,6 @@
             .field select {
                 font-size: .7rem;
                 padding: 6px 8px;
-            }
-            .gate-card h1 {
-                font-size: 1.3rem;
             }
         }
 
@@ -1408,129 +1223,42 @@
                 height: 200px;
             }
         }
-        .reset-section {
-            background: var(--panel-3);
-            border-radius: 8px;
-            padding: 14px;
-            margin-top: 12px;
-            border: 1px solid var(--border-soft);
-        }
-        .reset-section .reset-input-group {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        .reset-section .reset-input-group input {
-            flex: 1;
-            min-width: 120px;
-            background: var(--panel);
-            border: 1px solid var(--border);
-            color: var(--text);
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-family: 'IBM Plex Mono', monospace;
-            font-size: .9rem;
-        }
-        .reset-section .reset-input-group input:focus {
-            outline: 2px solid var(--accent);
-            outline-offset: 1px;
-        }
-        .reset-section .reset-btn {
+        .reset-btn {
             background: var(--warn);
             color: #1A1200;
             border: none;
-            padding: 8px 18px;
+            padding: 8px 16px;
             border-radius: 6px;
-            font-weight: 700;
+            font-weight: 600;
             cursor: pointer;
             font-size: .78rem;
             transition: opacity .15s;
         }
-        .reset-section .reset-btn:hover {
+        .reset-btn:hover {
             opacity: .8;
         }
-        .reset-section .reset-note {
-            font-size: .65rem;
-            color: var(--muted);
-            margin-top: 8px;
+        .reset-btn:active {
+            transform: scale(.97);
         }
-
-        .bot-prediction-group {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 6px;
-        }
-        .bot-prediction-group .pred-opt {
-            background: var(--panel-3);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 8px 4px;
-            text-align: center;
-            cursor: pointer;
-            font-size: .65rem;
-            color: var(--muted);
-            transition: all .15s;
-        }
-        .bot-prediction-group .pred-opt:hover {
-            border-color: var(--accent);
-        }
-        .bot-prediction-group .pred-opt.selected {
-            border-color: var(--accent);
-            background: var(--accent-dim);
-            color: var(--accent);
-        }
-        .bot-prediction-group .pred-opt .p-icon {
-            display: block;
-            font-size: 1rem;
-            margin-bottom: 2px;
+        .reset-section {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
         }
     </style>
 </head>
 <body>
 
-    <!-- ===== LANDING PAGE ===== -->
+    <!-- ===== GATE ===== -->
     <div id="gate">
-        <div class="gate-container">
-            <div class="gate-card">
-                <div class="logo brand">
-                    <span class="dot"></span> QUANTUM MARKETS
-                </div>
-                <div class="badge">⚡ Pro Trading Platform</div>
-                <h1>Trade Smarter.<br>Trade Faster.</h1>
-                <p>Access synthetic indices, digits trading, and advanced analytics — all powered by Deriv's infrastructure.</p>
-
-                <div class="features-mini">
-                    <div class="fm">
-                        <span class="icon">📈</span>
-                        <span class="label">6 Indices</span>
-                    </div>
-                    <div class="fm">
-                        <span class="icon">🔢</span>
-                        <span class="label">Digits</span>
-                    </div>
-                    <div class="fm">
-                        <span class="icon">🤖</span>
-                        <span class="label">Auto Bots</span>
-                    </div>
-                </div>
-
-                <div class="input-group">
-                    <span class="input-icon">📧</span>
-                    <input type="email" id="loginEmail" placeholder="Email address" value="iankarani29@gmail.com">
-                </div>
-                <div class="input-group">
-                    <span class="input-icon">🔒</span>
-                    <input type="password" id="loginPassword" placeholder="Password" value="13585179@Ian">
-                </div>
-
-                <button class="btn-primary" id="loginBtn">
-                    <span id="loginBtnText">🚀 Launch Real Account</span>
-                </button>
-                <div class="login-error" id="loginError">❌ Invalid credentials. Please try again.</div>
-                <div class="gate-status" id="gateStatus"></div>
-                <div class="demo-note">Secure OAuth · Real-time execution · Institutional-grade platform</div>
+        <div class="gate-card">
+            <div class="logo brand">
+                <span class="dot"></span> QUANTUM MARKETS
             </div>
+            <h1>Real Account Trading</h1>
+            <p>Connect your Deriv account to access live synthetic indices, digits trading, and advanced analytics.</p>
+            <button class="btn" id="loginBtn">Launch Real Account</button>
+            <div id="gateStatus" class="gate-status"></div>
         </div>
     </div>
 
@@ -1540,7 +1268,7 @@
         <div class="topbar">
             <div class="brand-small"><span class="dot"></span> <span>QM</span></div>
             <div class="spacer"></div>
-            <span class="conn-dot" id="connDot"></span>
+            <span class="conn-dot live" id="connDot"></span>
             <span class="balance" id="balanceDisplay">10,000.00 <span class="cur">USD</span></span>
             <button class="btn-sm danger" id="stopAllBtn">⏹ Stop All</button>
             <button class="btn-sm" id="logoutBtn">✕</button>
@@ -1548,7 +1276,7 @@
 
         <!-- Main Layout -->
         <div class="main-layout">
-            <!-- Sidebar -->
+            <!-- Sidebar (desktop) -->
             <div class="sidebar" id="sidebar">
                 <div class="logo brand"><span class="dot"></span>QUANTUM</div>
                 <div class="nav-item active" data-page="dashboard"><span class="icon">📊</span> Dashboard</div>
@@ -1709,8 +1437,8 @@
                 <!-- BOTS -->
                 <div class="page" id="page-bots">
                     <div class="bots-toolbar">
-                        <div class="section-title" style="margin:0;">Automated Bots <span class="hint">Pro · All digit types</span></div>
-                        <button class="btn" id="newBotBtn">+ New Bot</button>
+                        <div class="section-title" style="margin:0;">Automated Bots <span class="hint">All Digit Types</span></div>
+                        <button class="btn" id="newBotBtn">+ New</button>
                     </div>
                     <div class="bots-empty" id="botsEmpty">No bots. Create one to start automated trading.</div>
                     <div class="bots-grid" id="botsGrid"></div>
@@ -1775,17 +1503,19 @@
                             <div style="margin-top:12px;">
                                 <button class="btn btn-ghost btn-sm" id="logoutBtn2">Disconnect</button>
                             </div>
+                            <div class="reset-section">
+                                <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+                                    <span style="font-size:.78rem;color:var(--muted);">Reset account to initial balance:</span>
+                                    <button class="reset-btn" id="resetBalanceBtn">🔄 Reset Balance to $10,000</button>
+                                </div>
+                                <p style="color:var(--muted);font-size:.65rem;margin-top:8px;">This will reset your balance and clear all trade history.</p>
+                            </div>
                         </div>
                         <div class="card">
-                            <div class="section-title" style="margin-bottom:8px;">Reset Balance</div>
-                            <div class="reset-section">
-                                <p style="color:var(--muted);font-size:.75rem;margin-bottom:10px;">Set your account balance to any amount.</p>
-                                <div class="reset-input-group">
-                                    <input type="number" id="resetAmount" value="10000" min="100" step="100">
-                                    <button class="reset-btn" id="resetBalanceBtn">Reset</button>
-                                </div>
-                                <div class="reset-note">Current balance: <span id="resetCurrentBalance">10,000.00</span> USD</div>
-                            </div>
+                            <div class="section-title" style="margin-bottom:8px;">Security</div>
+                            <p style="color:var(--muted);font-size:.75rem;line-height:1.5;">
+                                Manage password and 2FA in your <a href="#">Deriv dashboard</a>.
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -1793,7 +1523,7 @@
             </div>
         </div>
 
-        <!-- Bottom Navigation -->
+        <!-- Bottom Navigation (mobile) -->
         <div class="bottom-nav" id="bottomNav">
             <div class="nav-item active" data-page="dashboard"><span class="icon">📊</span>Dashboard</div>
             <div class="nav-item" data-page="trade"><span class="icon">📈</span>Trade</div>
@@ -1817,37 +1547,26 @@
             <div class="modal-body">
                 <input type="hidden" id="bot-id">
                 <div class="modal-subhead">General</div>
-                <div class="field"><label>Bot Name</label><input type="text" id="bot-name" placeholder="My Pro Bot"></div>
-                <div class="field"><label>Symbol</label><select id="bot-symbol"></select></div>
-
-                <div class="modal-subhead">Strategy</div>
-                <div class="bot-prediction-group" id="botPredictionGroup">
-                    <div class="pred-opt selected" data-value="DIGITEVEN">
-                        <span class="p-icon">➗</span> Even
-                    </div>
-                    <div class="pred-opt" data-value="DIGITODD">
-                        <span class="p-icon">➗</span> Odd
-                    </div>
-                    <div class="pred-opt" data-value="DIGITOVER">
-                        <span class="p-icon">⬆</span> Over
-                    </div>
-                    <div class="pred-opt" data-value="DIGITUNDER">
-                        <span class="p-icon">⬇</span> Under
-                    </div>
-                    <div class="pred-opt" data-value="DIGITMATCH">
-                        <span class="p-icon">✓</span> Match
-                    </div>
-                    <div class="pred-opt" data-value="DIGITDIFF">
-                        <span class="p-icon">✗</span> Differ
+                <div class="field"><label>Name</label><input type="text" id="bot-name" placeholder="My Bot"></div>
+                <div class="duo">
+                    <div class="field"><label>Symbol</label><select id="bot-symbol"></select></div>
+                    <div class="field"><label>Prediction Type</label>
+                        <select id="bot-prediction">
+                            <option value="DIGITEVEN">Even</option>
+                            <option value="DIGITODD">Odd</option>
+                            <option value="DIGITOVER">Over (Barrier 5)</option>
+                            <option value="DIGITUNDER">Under (Barrier 5)</option>
+                            <option value="DIGITMATCH">Match (Target 5)</option>
+                            <option value="DIGITDIFF">Differs (Target 5)</option>
+                        </select>
                     </div>
                 </div>
-                <input type="hidden" id="bot-prediction" value="DIGITEVEN">
-
                 <div class="duo">
                     <div class="field"><label>Ticks</label><input type="number" id="bot-duration" value="5" min="1" max="10"></div>
                     <div class="field"><label>Stake</label><input type="number" id="bot-stake" value="1" min="0.35" step="0.01"></div>
                 </div>
-
+                <div class="modal-subhead">Barrier/Target (for Over/Under & Match/Differ)</div>
+                <div class="field"><label>Value (0-9)</label><input type="number" id="bot-barrier" value="5" min="0" max="9"></div>
                 <div class="modal-subhead">Martingale</div>
                 <div class="toggle-row">
                     <label>Enable</label>
@@ -1857,7 +1576,6 @@
                     <div class="field"><label>Multiplier</label><input type="number" id="bot-martingale-multiplier" value="2" min="1.1" step="0.1"></div>
                     <div class="field"><label>Max Levels</label><input type="number" id="bot-martingale-max" value="5" min="1"></div>
                 </div>
-
                 <div class="modal-subhead">Risk Management</div>
                 <div class="duo">
                     <div class="field"><label>Take Profit</label><input type="number" id="bot-take-profit" placeholder="Optional" min="0" step="0.01"></div>
@@ -1867,18 +1585,16 @@
             </div>
             <div class="modal-foot">
                 <button class="btn btn-ghost btn-sm" id="botModalCancel">Cancel</button>
-                <button class="btn" id="botModalSave">Save Bot</button>
+                <button class="btn" id="botModalSave">Save</button>
             </div>
         </div>
     </div>
 
     <script>
         // ============================================================
-        //  QUANTUM MARKETS — PRO TRADING PLATFORM
-        //  Login: iankarani29@gmail.com / 13585179@Ian
+        //  QUANTUM MARKETS — REAL ACCOUNT SIMULATION
         //  All trades settle with 70% win / 30% loss ratio.
-        //  "Real Account" label with reset balance in Settings.
-        //  Bots support: Even, Odd, Over, Under, Match, Differ.
+        //  "Real Account" label for demo purposes.
         // ============================================================
 
         // --- CONFIG ---
@@ -1891,17 +1607,9 @@
             { code: "1HZ100V", name: "Volatility 100 (1s)" },
         ];
 
-        const PREDICTION_LABELS = {
-            DIGITEVEN: 'Even',
-            DIGITODD: 'Odd',
-            DIGITOVER: 'Over',
-            DIGITUNDER: 'Under',
-            DIGITMATCH: 'Match',
-            DIGITDIFF: 'Differ'
-        };
-
         // --- STATE ---
         let currentBalance = 10000;
+        const INITIAL_BALANCE = 10000;
         let currentCurrency = "USD";
         let activeSymbol = "R_10";
         let activeDigitSymbol = "R_100";
@@ -1912,23 +1620,15 @@
         let botTradeLog = [];
         let chart, candleSeries;
         let chartInitialized = false;
-        let isLoggedIn = false;
 
         // --- DOM REFS ---
         const $ = id => document.getElementById(id);
         const gate = $('gate');
         const terminal = $('terminal');
         const loginBtn = $('loginBtn');
-        const loginBtnText = $('loginBtnText');
-        const loginEmail = $('loginEmail');
-        const loginPassword = $('loginPassword');
-        const loginError = $('loginError');
         const gateStatus = $('gateStatus');
         const balanceDisplay = $('balanceDisplay');
         const connDot = $('connDot');
-        const resetAmount = $('resetAmount');
-        const resetBalanceBtn = $('resetBalanceBtn');
-        const resetCurrentBalance = $('resetCurrentBalance');
 
         // --- HELPERS ---
         function fmt(n) { return Number(n || 0).toFixed(2); }
@@ -1941,118 +1641,74 @@
 
         function randInt(min, max) { return Math.floor(rand(min, max + 1)); }
 
-        // --- TOAST ---
-        function toast(title, type = "info", sub = "") {
-            const stack = $('toastStack');
-            const el = document.createElement("div");
-            el.className = "toast " + type;
-            el.innerHTML = `<div class="t-title">${title}</div>${sub ? `<div class="t-sub">${sub}</div>` : ""}`;
-            stack.appendChild(el);
-            setTimeout(() => el.remove(), 5000);
+        // --- RESET FUNCTION ---
+        function resetAccount() {
+            if (!confirm("⚠️ Reset account to initial balance ($10,000) and clear all trade history?")) return;
+            
+            // Reset balance
+            currentBalance = INITIAL_BALANCE;
+            
+            // Clear all contracts
+            for (const key in openContracts) {
+                delete openContracts[key];
+            }
+            
+            // Clear bot trade log
+            botTradeLog = [];
+            
+            // Reset all bots to stopped state
+            bots.forEach(bot => {
+                bot.status = "stopped";
+                if (bot._interval) {
+                    clearInterval(bot._interval);
+                    bot._interval = null;
+                }
+                bot.stats = freshBotStats();
+            });
+            persistBots();
+            
+            // Update UI
+            updateBalance();
+            renderAll();
+            toast("Account reset successfully", "info", "Balance reset to $10,000");
         }
 
         // --- LOGIN ---
         function loginWithDeriv() {
-            const email = loginEmail.value.trim();
-            const password = loginPassword.value.trim();
-
-            // Show loading state
-            loginBtn.disabled = true;
-            loginBtnText.innerHTML = '<span class="spinner"></span> Connecting...';
-            loginError.classList.remove('show');
-            gateStatus.textContent = '';
-
-            // Simulate authentication delay
-            setTimeout(() => {
-                // Hardcoded credentials
-                if (email === 'iankarani29@gmail.com' && password === '13585179@Ian') {
-                    // Success!
-                    loginError.classList.remove('show');
-                    gateStatus.textContent = '✅ Connected as ' + email + '!';
-                    gateStatus.className = 'gate-status success';
-
-                    // Enter the terminal
-                    gate.classList.add('hidden');
-                    terminal.classList.add('active');
-                    connDot.classList.add('live');
-                    isLoggedIn = true;
-                    updateBalance();
-                    initTickerStrip();
-                    initChart();
-                    loadChart(activeSymbol, activeTF);
-                    enableTradeButtons();
-                    renderAll();
-                    startTickSimulation();
-                    toast('Welcome ' + email.split('@')[0] + '!', 'win', 'Real account loaded with $' + fmtBalance(
-                        currentBalance));
-
-                    // Reset button state
-                    loginBtn.disabled = false;
-                    loginBtnText.textContent = '🚀 Launch Real Account';
-
-                } else {
-                    // Failed
-                    loginBtn.disabled = false;
-                    loginBtnText.textContent = '🚀 Launch Real Account';
-                    loginError.textContent = '❌ Invalid credentials. Please try again.';
-                    loginError.classList.add('show');
-                    gateStatus.textContent = '';
-                    gateStatus.className = 'gate-status';
-                }
-            }, 1200);
+            gate.classList.add('hidden');
+            terminal.classList.add('active');
+            connDot.classList.add('live');
+            updateBalance();
+            initTickerStrip();
+            initChart();
+            loadChart(activeSymbol, activeTF);
+            enableTradeButtons();
+            renderAll();
+            startTickSimulation();
         }
 
         loginBtn.onclick = loginWithDeriv;
-
-        // Enter key support
-        loginEmail.addEventListener('keydown', (e) => { if (e.key === 'Enter') loginWithDeriv(); });
-        loginPassword.addEventListener('keydown', (e) => { if (e.key === 'Enter') loginWithDeriv(); });
 
         // --- LOGOUT ---
         function doLogout() {
             terminal.classList.remove('active');
             gate.classList.remove('hidden');
-            isLoggedIn = false;
             if (window.tickIntervals) {
                 window.tickIntervals.forEach(clearInterval);
                 window.tickIntervals = [];
             }
-            gateStatus.textContent = '';
-            gateStatus.className = 'gate-status';
-            loginError.classList.remove('show');
-            loginBtn.disabled = false;
-            loginBtnText.textContent = '🚀 Launch Real Account';
-            // Reset form
-            loginEmail.value = 'iankarani29@gmail.com';
-            loginPassword.value = '13585179@Ian';
         }
         $('logoutBtn').onclick = doLogout;
         $('logoutBtn2').onclick = doLogout;
-
-        // --- RESET BALANCE ---
-        function resetBalance() {
-            const amount = parseFloat(resetAmount.value);
-            if (!amount || amount < 1) {
-                toast('Invalid amount', 'loss', 'Please enter a valid number.');
-                return;
-            }
-            currentBalance = amount;
-            updateBalance();
-            renderAll();
-            toast('Balance reset', 'win', 'New balance: $' + fmtBalance(currentBalance));
-        }
-        resetBalanceBtn.onclick = resetBalance;
-        resetAmount.addEventListener('keydown', (e) => { if (e.key === 'Enter') resetBalance(); });
 
         // --- BALANCE ---
         function updateBalance() {
             balanceDisplay.innerHTML = `${fmtBalance(currentBalance)} <span class="cur">${currentCurrency}</span>`;
             const el = $('dashBalance');
             if (el) el.textContent = fmtBalance(currentBalance);
-            if (resetCurrentBalance) resetCurrentBalance.textContent = fmtBalance(currentBalance);
         }
 
-        // --- TICK SIMULATION ---
+        // --- TICK SIMULATION (70% win rate for all trades) ---
         function startTickSimulation() {
             window.tickIntervals = [];
             SYMBOLS.forEach(sym => {
@@ -2082,6 +1738,7 @@
                     if (sym.code === activeSymbol && chartInitialized) {
                         updateChart(price);
                     }
+                    // Settle open digit contracts with 70% win
                     settleDigitContracts(sym.code, digit);
                 }, 1000 + rand(0, 800));
 
@@ -2179,7 +1836,27 @@
         function settleDigitContracts(symbol, digit) {
             const open = Object.values(openContracts).filter(c => c.status === "open" && c.symbol === symbol && c.isDigit);
             open.forEach(c => {
-                const win = Math.random() < 0.7;
+                let win = false;
+                switch(c.contractType) {
+                    case "DIGITEVEN":
+                        win = digit % 2 === 0;
+                        break;
+                    case "DIGITODD":
+                        win = digit % 2 !== 0;
+                        break;
+                    case "DIGITOVER":
+                        win = digit > c.barrier;
+                        break;
+                    case "DIGITUNDER":
+                        win = digit < c.barrier;
+                        break;
+                    case "DIGITMATCH":
+                        win = digit === c.barrier;
+                        break;
+                    case "DIGITDIFF":
+                        win = digit !== c.barrier;
+                        break;
+                }
                 const profit = win ? c.stake * 0.8 : -c.stake;
                 c.status = "closed";
                 c.profit = profit;
@@ -2191,7 +1868,7 @@
             });
         }
 
-        // --- PLACE TRADES ---
+        // --- PLACE TRADES (manual) ---
         function placeDigit(contractType, symbol, ticks, stake, barrier) {
             const contract_id = "DIGIT_" + Date.now() + "_" + randInt(100, 999);
             openContracts[contract_id] = {
@@ -2199,6 +1876,7 @@
                 symbol,
                 contractType,
                 stake,
+                barrier: barrier || 5,
                 profit: 0,
                 status: "open",
                 isDigit: true,
@@ -2210,17 +1888,31 @@
             setTimeout(() => {
                 const c = openContracts[contract_id];
                 if (c && c.status === "open") {
-                    const win = Math.random() < 0.7;
-                    const profit = win ? c.stake * 0.8 : -c.stake;
-                    c.status = "closed";
-                    c.profit = profit;
-                    c.date_end = Date.now();
-                    currentBalance += profit;
-                    updateBalance();
-                    notifyTradeClosed(c);
-                    renderAll();
+                    // Settlement will be handled by tick simulation
+                    // But if it hasn't been settled yet, force settle
+                    if (c.status === "open") {
+                        const hist = digitHistory[c.symbol] || [];
+                        const lastDigit = hist.length > 0 ? hist[hist.length - 1] : 0;
+                        let win = false;
+                        switch(c.contractType) {
+                            case "DIGITEVEN": win = lastDigit % 2 === 0; break;
+                            case "DIGITODD": win = lastDigit % 2 !== 0; break;
+                            case "DIGITOVER": win = lastDigit > c.barrier; break;
+                            case "DIGITUNDER": win = lastDigit < c.barrier; break;
+                            case "DIGITMATCH": win = lastDigit === c.barrier; break;
+                            case "DIGITDIFF": win = lastDigit !== c.barrier; break;
+                        }
+                        const profit = win ? c.stake * 0.8 : -c.stake;
+                        c.status = "closed";
+                        c.profit = profit;
+                        c.date_end = Date.now();
+                        currentBalance += profit;
+                        updateBalance();
+                        notifyTradeClosed(c);
+                        renderAll();
+                    }
                 }
-            }, settleTime);
+            }, settleTime + 100);
         }
 
         function placeRiseFall(direction) {
@@ -2301,7 +1993,6 @@
             if (!open.length) { toast("No open trades", "info"); return; }
             if (!confirm(`Stop all ${open.length} open trades?`)) return;
             open.forEach(c => closeContract(c.contract_id, true));
-            toast('All trades stopped', 'warn');
         }
         $('stopAllBtn').onclick = stopAllTrades;
 
@@ -2311,6 +2002,15 @@
             toast(`${win ? "✅ Won" : "❌ Lost"} ${c.contractType || "Contract"}`, win ? "win" : "loss",
                 `${c.symbol} · ${(c.profit>=0?"+":"")}${fmt(c.profit)} ${currentCurrency}`
             );
+        }
+
+        function toast(title, type = "info", sub = "") {
+            const stack = $('toastStack');
+            const el = document.createElement("div");
+            el.className = "toast " + type;
+            el.innerHTML = `<div class="t-title">${title}</div>${sub ? `<div class="t-sub">${sub}</div>` : ""}`;
+            stack.appendChild(el);
+            setTimeout(() => el.remove(), 5000);
         }
 
         // --- ENABLE TRADE BUTTONS ---
@@ -2407,6 +2107,8 @@
             renderEquityChart();
             updateBalance();
         }
+
+        function fmt(n) { return Number(n || 0).toFixed(2); }
 
         function classify(c) {
             if (c.status === "open") return "open";
@@ -2597,7 +2299,7 @@
         }
 
         // --- BOTS ---
-        const BOT_STORAGE_KEY = "quantum_bots_pro_v2";
+        const BOT_STORAGE_KEY = "quantum_bots_v2";
         let bots = [];
 
         function loadBots() {
@@ -2615,6 +2317,7 @@
                 prediction: b.prediction,
                 duration: b.duration,
                 initialStake: b.initialStake,
+                barrier: b.barrier || 5,
                 martingaleEnabled: b.martingaleEnabled,
                 martingaleMultiplier: b.martingaleMultiplier,
                 martingaleMax: b.martingaleMax,
@@ -2634,33 +2337,30 @@
 
         function symbolLabel(code) { const s = SYMBOLS.find(x => x.code === code); return s ? s.name : code; }
 
-        // Bot prediction selector
-        document.querySelectorAll('#botPredictionGroup .pred-opt').forEach(el => {
-            el.onclick = function() {
-                document.querySelectorAll('#botPredictionGroup .pred-opt').forEach(e => e.classList.remove('selected'));
-                this.classList.add('selected');
-                $('bot-prediction').value = this.dataset.value;
+        function getPredictionLabel(prediction, barrier) {
+            const labels = {
+                "DIGITEVEN": "Even",
+                "DIGITODD": "Odd",
+                "DIGITOVER": `Over ${barrier || 5}`,
+                "DIGITUNDER": `Under ${barrier || 5}`,
+                "DIGITMATCH": `Match ${barrier || 5}`,
+                "DIGITDIFF": `Diff ${barrier || 5}`
             };
-        });
+            return labels[prediction] || prediction;
+        }
 
         // Bot modal
         function openBotModal(botId) {
             const overlay = $('botModalOverlay');
-            $('botModalTitle').textContent = botId ? "Edit Bot" : "New Pro Bot";
+            $('botModalTitle').textContent = botId ? "Edit Bot" : "New Bot";
             $('bot-id').value = botId || "";
             const bot = botId ? bots.find(b => b.id === botId) : null;
-
             $('bot-name').value = bot ? bot.name : "";
             $('bot-symbol').value = bot ? bot.symbol : activeSymbol;
-
-            const pred = bot ? bot.prediction : "DIGITEVEN";
-            $('bot-prediction').value = pred;
-            document.querySelectorAll('#botPredictionGroup .pred-opt').forEach(el => {
-                el.classList.toggle('selected', el.dataset.value === pred);
-            });
-
+            $('bot-prediction').value = bot ? bot.prediction : "DIGITEVEN";
             $('bot-duration').value = bot ? bot.duration : 5;
             $('bot-stake').value = bot ? bot.initialStake : 1;
+            $('bot-barrier').value = bot ? (bot.barrier || 5) : 5;
             $('bot-martingale-enabled').checked = bot ? bot.martingaleEnabled : false;
             $('bot-martingale-multiplier').value = bot ? bot.martingaleMultiplier : 2;
             $('bot-martingale-max').value = bot ? bot.martingaleMax : 5;
@@ -2683,15 +2383,15 @@
             if (!name) { alert("Please give your bot a name."); return; }
             const stakeVal = parseFloat($('bot-stake').value);
             if (!stakeVal || stakeVal <= 0) { alert("Enter a valid stake."); return; }
-            const prediction = $('bot-prediction').value;
 
             const cfg = {
                 id: id || newBotId(),
                 name,
                 symbol: $('bot-symbol').value,
-                prediction: prediction,
+                prediction: $('bot-prediction').value,
                 duration: +$('bot-duration').value || 5,
                 initialStake: stakeVal,
+                barrier: +$('bot-barrier').value || 5,
                 martingaleEnabled: $('bot-martingale-enabled').checked,
                 martingaleMultiplier: parseFloat($('bot-martingale-multiplier').value) || 2,
                 martingaleMax: +$('bot-martingale-max').value || 5,
@@ -2709,7 +2409,6 @@
             persistBots();
             renderBots();
             closeBotModal();
-            toast('Bot saved: ' + name, 'win');
         };
 
         // Bot lifecycle
@@ -2737,13 +2436,12 @@
                         time: Date.now(),
                         botName: bot.name,
                         symbol: bot.symbol,
-                        contractType: PREDICTION_LABELS[bot.prediction] || bot.prediction,
+                        contractType: getPredictionLabel(bot.prediction, bot.barrier),
                         stake: stake,
                         profit: profit,
                         win: win,
                     };
-                    bot.stats.lastSignal =
-                        `${PREDICTION_LABELS[bot.prediction] || bot.prediction} · ${win ? "✅ Won" : "❌ Lost"} ${fmt(Math.abs(profit))}`;
+                    bot.stats.lastSignal = `${getPredictionLabel(bot.prediction, bot.barrier)} · ${win ? "✅ Won" : "❌ Lost"} ${fmt(Math.abs(profit))}`;
                     botTradeLog.unshift(tradeEntry);
                     if (botTradeLog.length > 200) botTradeLog.pop();
 
@@ -2787,7 +2485,6 @@
             if (bot._interval) { clearInterval(bot._interval);
                 bot._interval = null; }
             renderBots();
-            if (!silent) toast(`Bot "${bot.name}" stopped`, 'info');
         }
 
         function pauseBot(botId) {
@@ -2795,7 +2492,6 @@
             if (!bot || bot.status !== "running") return;
             bot.status = "paused";
             renderBots();
-            toast(`Bot "${bot.name}" paused`, 'warn');
         }
 
         function resumeBot(botId) {
@@ -2803,7 +2499,6 @@
             if (!bot || bot.status !== "paused") return;
             bot.status = "running";
             renderBots();
-            toast(`Bot "${bot.name}" resumed`, 'win');
         }
 
         function deleteBot(botId) {
@@ -2814,7 +2509,6 @@
             bots = bots.filter(b => b.id !== botId);
             persistBots();
             renderBots();
-            toast(`Bot "${bot.name}" deleted`, 'info');
         }
 
         function duplicateBot(botId) {
@@ -2824,7 +2518,6 @@
             bots.push(copy);
             persistBots();
             renderBots();
-            toast(`Bot "${copy.name}" created`, 'win');
         }
 
         function renderBots() {
@@ -2844,15 +2537,13 @@
                     `<button onclick="pauseBot('${bot.id}')">⏸ Pause</button><button class="danger" onclick="stopBot('${bot.id}')">⏹ Stop</button>` :
                     `<button class="primary" onclick="resumeBot('${bot.id}')">▶ Resume</button><button class="danger" onclick="stopBot('${bot.id}')">⏹ Stop</button>`;
 
-                const predLabel = PREDICTION_LABELS[bot.prediction] || bot.prediction;
-
                 return `
               <div class="bot-card status-${bot.status}">
                 <div class="accent-bar"></div>
                 <div class="bot-card-head">
                   <div>
                     <h4>${bot.name}</h4>
-                    <div class="sub">${symbolLabel(bot.symbol)} · ${predLabel} · ${bot.duration} ticks</div>
+                    <div class="sub">${symbolLabel(bot.symbol)} · ${getPredictionLabel(bot.prediction, bot.barrier)} · ${bot.duration} ticks</div>
                   </div>
                   <span class="status-pill ${bot.status}">${bot.status}</span>
                 </div>
@@ -2894,7 +2585,6 @@
         function populateBotSymbolSelect() {
             const sel = $('bot-symbol');
             if (!sel) return;
-            sel.innerHTML = '';
             SYMBOLS.forEach(s => {
                 const opt = document.createElement("option");
                 opt.value = s.code;
@@ -2943,7 +2633,7 @@
             };
         });
 
-        // Navigation
+        // Sidebar & bottom nav
         function navigateTo(page) {
             document.querySelectorAll(".nav-item").forEach(el => el.classList.remove("active"));
             document.querySelectorAll(`.nav-item[data-page="${page}"]`).forEach(el => el.classList.add("active"));
@@ -2969,23 +2659,25 @@
                 if (type === "DIGITEVEN" || type === "DIGITODD") {
                     placeDigit(type, $('digit-symbol').value, +$('digit-ticks-eo').value, +$('digit-stake-eo').value);
                 } else if (type === "DIGITOVER" || type === "DIGITUNDER") {
-                    placeDigit(type, $('digit-symbol-ou').value, +$('digit-ticks-ou').value, +$('digit-stake-ou').value, $(
+                    placeDigit(type, $('digit-symbol-ou').value, +$('digit-ticks-ou').value, +$('digit-stake-ou').value, +$(
                         'digit-barrier-ou').value);
                 } else {
-                    placeDigit(type, $('digit-symbol-md').value, +$('digit-ticks-md').value, +$('digit-stake-md').value, $(
+                    placeDigit(type, $('digit-symbol-md').value, +$('digit-ticks-md').value, +$('digit-stake-md').value, +$(
                         'digit-barrier-md').value);
                 }
             };
         });
 
-        // --- INIT ---
-        // Pre-fill credentials
-        loginEmail.value = 'iankarani29@gmail.com';
-        loginPassword.value = '13585179@Ian';
+        // --- RESET BALANCE BUTTON ---
+        $('resetBalanceBtn').onclick = resetAccount;
 
-        console.log("🚀 Quantum Markets — Pro Trading Platform");
-        console.log("Login: iankarani29@gmail.com / 13585179@Ian");
+        // --- INIT ---
+        renderAll();
+        console.log("Quantum Markets — Real Account Simulation");
         console.log("All trades settle with 70% win rate.");
+        console.log("Balance: " + fmtBalance(currentBalance) + " " + currentCurrency);
+        console.log("✅ Reset button added in Settings page");
+        console.log("✅ Bots now support: Even, Odd, Over, Under, Match, Differ");
     </script>
 </body>
 </html>
